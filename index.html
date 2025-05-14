@@ -1,0 +1,1343 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FREEFIT - Tu Gimnasio de Confianza</title>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --primary: #65A6D6;
+            --primary-dark: #4a90d6;
+            --primary-light: #B3DDF2;
+            --secondary: #b2ebf2;
+            --accent: #FF9900;
+            --dark: #333333;
+            --light: #f8f9fa;
+            --gray: #6c757d;
+            --white: #ffffff;
+            --black: #000000;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Roboto', sans-serif;
+            color: var(--dark);
+            line-height: 1.6;
+            overflow-x: hidden;
+        }
+        
+        html {
+            scroll-behavior: smooth;
+        }
+        
+        section {
+            padding: 80px 0;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+        
+        /* Header & Navigation */
+        .header {
+            background-color: rgba(255, 255, 255, 0.95);
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            position: fixed;
+            top: 0;
+            width: 100%;
+            z-index: 1000;
+            transition: all 0.3s ease;
+        }
+        
+        .header.scrolled {
+            background-color: rgba(255, 255, 255, 0.98);
+            padding: 5px 0;
+        }
+        
+        .nav-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px 5%;
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+        
+        .logo {
+            display: flex;
+            align-items: center;
+        }
+        
+        .logo img {
+            height: 50px;
+            margin-right: 10px;
+        }
+        
+        .logo a {
+            color: var(--primary-dark);
+            text-decoration: none;
+            font-size: 24px;
+            font-weight: 700;
+        }
+        
+        .nav-links {
+            display: flex;
+            list-style: none;
+        }
+        
+        .nav-links li {
+            margin: 0 15px;
+        }
+        
+        .nav-links a {
+            color: var(--dark);
+            text-decoration: none;
+            font-weight: 500;
+            position: relative;
+            transition: color 0.3s ease;
+        }
+        
+        .nav-links a:hover {
+            color: var(--primary);
+        }
+        
+        .nav-links a::after {
+            content: '';
+            position: absolute;
+            width: 0;
+            height: 2px;
+            bottom: -5px;
+            left: 0;
+            background-color: var(--primary);
+            transition: width 0.3s ease;
+        }
+        
+        .nav-links a:hover::after {
+            width: 100%;
+        }
+        
+        .auth-buttons {
+            display: flex;
+            gap: 10px;
+        }
+        
+        .btn {
+            display: inline-block;
+            padding: 10px 20px;
+            border-radius: 30px;
+            text-decoration: none;
+            font-weight: 500;
+            text-align: center;
+            transition: all 0.3s ease;
+            cursor: pointer;
+            border: none;
+        }
+        
+        .btn-primary {
+            background-color: var(--primary);
+            color: white;
+        }
+        
+        .btn-primary:hover {
+            background-color: var(--primary-dark);
+            transform: translateY(-3px);
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+        }
+        
+        .btn-outline {
+            background-color: transparent;
+            color: var(--primary);
+            border: 2px solid var(--primary);
+        }
+        
+        .btn-outline:hover {
+            background-color: var(--primary);
+            color: white;
+            transform: translateY(-3px);
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+        }
+        
+        .hamburger {
+            display: none;
+            cursor: pointer;
+        }
+        
+        .hamburger div {
+            width: 25px;
+            height: 3px;
+            background-color: var(--dark);
+            margin: 5px;
+            transition: all 0.3s ease;
+        }
+        
+        /* Hero Section */
+        .hero {
+            background: linear-gradient(rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.6)), url('../image/hero-bg.jpg');
+            background-size: cover;
+            background-position: center;
+            color: white;
+            text-align: center;
+            padding: 180px 0 100px;
+            position: relative;
+        }
+        
+        .hero::before {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            height: 100px;
+            background: linear-gradient(to bottom, transparent, rgba(255,255,255,1));
+        }
+        
+        .hero-content {
+            max-width: 800px;
+            margin: 0 auto;
+            position: relative;
+            z-index: 1;
+        }
+        
+        .hero h1 {
+            font-size: 48px;
+            font-weight: 900;
+            margin-bottom: 20px;
+            letter-spacing: 1px;
+        }
+        
+        .hero p {
+            font-size: 20px;
+            margin-bottom: 30px;
+            font-weight: 300;
+        }
+        
+        .hero-buttons {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            margin-top: 30px;
+        }
+        
+        .hero-buttons .btn {
+            padding: 12px 30px;
+            font-size: 16px;
+        }
+        
+        /* About Section */
+        .about {
+            background-color: var(--white);
+            padding: 80px 0;
+        }
+        
+        .section-title {
+            text-align: center;
+            margin-bottom: 60px;
+        }
+        
+        .section-title h2 {
+            font-size: 36px;
+            font-weight: 700;
+            color: var(--primary-dark);
+            position: relative;
+            display: inline-block;
+        }
+        
+        .section-title h2::after {
+            content: '';
+            position: absolute;
+            width: 100px;
+            height: 4px;
+            background-color: var(--accent);
+            bottom: -10px;
+            left: 50%;
+            transform: translateX(-50%);
+        }
+        
+        .about-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 40px;
+        }
+        
+        .about-image {
+            flex: 1;
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 6px 12px rgba(0,0,0,0.1);
+        }
+        
+        .about-image img {
+            width: 100%;
+            height: auto;
+            display: block;
+            transition: transform 0.5s ease;
+        }
+        
+        .about-image:hover img {
+            transform: scale(1.05);
+        }
+        
+        .about-text {
+            flex: 1;
+        }
+        
+        .about-text h3 {
+            font-size: 28px;
+            font-weight: 700;
+            margin-bottom: 20px;
+            color: var(--dark);
+        }
+        
+        .about-text p {
+            font-size: 16px;
+            margin-bottom: 15px;
+            color: var(--gray);
+        }
+        
+        .features {
+            display: flex;
+            flex-wrap: wrap;
+            margin-top: 30px;
+        }
+        
+        .feature {
+            flex: 1 0 40%;
+            display: flex;
+            align-items: flex-start;
+            margin-bottom: 20px;
+            padding-right: 20px;
+        }
+        
+        .feature i {
+            color: var(--primary);
+            font-size: 24px;
+            margin-right: 10px;
+            margin-top: 5px;
+        }
+        
+        .feature-text h4 {
+            font-size: 18px;
+            margin-bottom: 5px;
+        }
+        
+        .feature-text p {
+            font-size: 14px;
+            color: var(--gray);
+        }
+        
+        /* Memberships Section */
+        .memberships {
+            background-color: var(--light);
+            padding: 100px 0;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .memberships::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 50px;
+            background: linear-gradient(to top, transparent, rgba(255,255,255,0.8));
+        }
+        
+        .membership-cards {
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+            gap: 30px;
+            margin-top: 50px;
+        }
+        
+        .membership-card {
+            background-color: white;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            overflow: hidden;
+            width: 350px;
+            text-align: center;
+            transition: all 0.3s ease;
+            position: relative;
+        }
+        
+        .membership-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 15px 40px rgba(0,0,0,0.15);
+        }
+        
+        .card-header {
+            padding: 30px;
+            position: relative;
+        }
+        
+        .card-header h3 {
+            font-size: 24px;
+            font-weight: 700;
+            margin-bottom: 10px;
+        }
+        
+        .card-header .price {
+            font-size: 42px;
+            font-weight: 700;
+            color: var(--primary-dark);
+            margin-bottom: 5px;
+        }
+        
+        .card-header .price span {
+            font-size: 16px;
+            font-weight: 400;
+            color: var(--gray);
+        }
+        
+        .card-header img {
+            width: 100px;
+            height: auto;
+            margin-bottom: 15px;
+        }
+        
+        .card-body {
+            padding: 0 30px 30px;
+        }
+        
+        .features-list {
+            list-style: none;
+            text-align: left;
+            margin-bottom: 30px;
+        }
+        
+        .features-list li {
+            padding: 10px 0;
+            border-bottom: 1px solid #eee;
+            display: flex;
+            align-items: center;
+        }
+        
+        .features-list li:last-child {
+            border-bottom: none;
+        }
+        
+        .features-list i {
+            margin-right: 10px;
+            color: var(--primary);
+            font-size: 16px;
+        }
+        
+        .membership-card .btn {
+            width: 100%;
+            padding: 12px;
+        }
+        
+        .popular-badge {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            background-color: var(--accent);
+            color: white;
+            padding: 5px 15px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 500;
+            z-index: 1;
+        }
+        
+        /* Gold card */
+        .gold-card .card-header {
+            background-color: #FAFAFA;
+            color: #333;
+        }
+        
+        .gold-card .price {
+            color: #D4AF37;
+        }
+        
+        /* Silver card */
+        .silver-card .card-header {
+            background-color: #FAFAFA;
+            color: #333;
+        }
+        
+        .silver-card .price {
+            color: #C0C0C0;
+        }
+        
+        /* Bronze card */
+        .bronze-card .card-header {
+            background-color: #FAFAFA;
+            color: #333;
+        }
+        
+        .bronze-card .price {
+            color: #CD7F32;
+        }
+        
+        /* Classes Section */
+        .classes {
+            background-color: var(--white);
+            padding: 100px 0;
+        }
+        
+        .classes-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 30px;
+            margin-top: 50px;
+        }
+        
+        .class-card {
+            background-color: var(--light);
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            transition: all 0.3s ease;
+        }
+        
+        .class-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(0,0,0,0.15);
+        }
+        
+        .class-image {
+            height: 200px;
+            overflow: hidden;
+        }
+        
+        .class-image img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.5s ease;
+        }
+        
+        .class-card:hover .class-image img {
+            transform: scale(1.1);
+        }
+        
+        .class-content {
+            padding: 20px;
+        }
+        
+        .class-content h3 {
+            font-size: 20px;
+            font-weight: 700;
+            margin-bottom: 10px;
+        }
+        
+        .class-content p {
+            font-size: 14px;
+            color: var(--gray);
+            margin-bottom: 15px;
+        }
+        
+        .class-schedule {
+            display: flex;
+            align-items: center;
+            margin-top: 15px;
+            color: var(--gray);
+            font-size: 14px;
+        }
+        
+        .class-schedule i {
+            color: var(--primary);
+            margin-right: 8px;
+        }
+        
+        /* Testimonials Section */
+        .testimonials {
+            background-color: var(--primary-light);
+            padding: 100px 0;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .testimonials::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 50px;
+            background: linear-gradient(to top, transparent, rgba(255,255,255,0.8));
+        }
+        
+        .testimonial-cards {
+            display: flex;
+            gap: 30px;
+            overflow-x: scroll;
+            -ms-overflow-style: none;  /* IE and Edge */
+            scrollbar-width: none;  /* Firefox */
+            padding: 20px 10px;
+            margin: 50px -10px 0;
+        }
+        
+        .testimonial-cards::-webkit-scrollbar {
+            display: none;
+        }
+        
+        .testimonial-card {
+            background-color: white;
+            border-radius: 10px;
+            box-shadow: 0 8px 20px rgba(0,0,0,0.1);
+            padding: 30px;
+            min-width: 300px;
+            flex: 0 0 350px;
+            position: relative;
+        }
+        
+        .testimonial-card::before {
+            content: '\201C';
+            font-family: Georgia, serif;
+            font-size: 60px;
+            position: absolute;
+            top: 10px;
+            left: 20px;
+            color: rgba(0,0,0,0.1);
+        }
+        
+        .testimonial-card p {
+            margin-bottom: 20px;
+            font-style: italic;
+            line-height: 1.7;
+        }
+        
+        .testimonial-author {
+            display: flex;
+            align-items: center;
+        }
+        
+        .testimonial-author img {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            margin-right: 15px;
+            object-fit: cover;
+        }
+        
+        .author-info h4 {
+            font-size: 16px;
+            margin-bottom: 5px;
+        }
+        
+        .author-info span {
+            font-size: 14px;
+            color: var(--gray);
+        }
+        
+        /* Call to Action */
+        .cta {
+            background: linear-gradient(to right, var(--primary-dark), var(--primary));
+            color: white;
+            text-align: center;
+            padding: 80px 0;
+        }
+        
+        .cta h2 {
+            font-size: 36px;
+            font-weight: 700;
+            margin-bottom: 20px;
+        }
+        
+        .cta p {
+            font-size: 18px;
+            max-width: 600px;
+            margin: 0 auto 30px;
+            opacity: 0.9;
+        }
+        
+        .cta .btn {
+            background-color: white;
+            color: var(--primary-dark);
+            padding: 15px 30px;
+            font-size: 18px;
+            font-weight: 600;
+        }
+        
+        .cta .btn:hover {
+            background-color: var(--light);
+            transform: translateY(-3px);
+        }
+        
+        /* Footer */
+        .footer {
+            background-color: var(--dark);
+            color: white;
+            padding: 80px 0 20px;
+        }
+        
+        .footer-content {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-between;
+            margin-bottom: 60px;
+        }
+        
+        .footer-column {
+            flex: 1;
+            min-width: 200px;
+            margin-bottom: 30px;
+        }
+        
+        .footer-column h3 {
+            font-size: 20px;
+            font-weight: 600;
+            margin-bottom: 20px;
+            color: white;
+        }
+        
+        .footer-column p {
+            margin-bottom: 20px;
+            color: rgba(255,255,255,0.7);
+            font-size: 14px;
+            line-height: 1.8;
+        }
+        
+        .footer-links {
+            list-style: none;
+        }
+        
+        .footer-links li {
+            margin-bottom: 10px;
+        }
+        
+        .footer-links a {
+            color: rgba(255,255,255,0.7);
+            text-decoration: none;
+            transition: color 0.3s ease;
+            font-size: 14px;
+        }
+        
+        .footer-links a:hover {
+            color: white;
+        }
+        
+        .social-links {
+            display: flex;
+            gap: 10px;
+            margin-top: 20px;
+        }
+        
+        .social-links a {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background-color: rgba(255,255,255,0.1);
+            color: white;
+            transition: all 0.3s ease;
+        }
+        
+        .social-links a:hover {
+            background-color: var(--primary);
+            transform: translateY(-3px);
+        }
+        
+        .footer-bottom {
+            text-align: center;
+            padding-top: 30px;
+            border-top: 1px solid rgba(255,255,255,0.1);
+        }
+        
+        .footer-bottom p {
+            font-size: 14px;
+            color: rgba(255,255,255,0.7);
+        }
+        
+        /* Contact Form */
+        .contact-form {
+            margin-top: 20px;
+        }
+        
+        .form-group {
+            margin-bottom: 15px;
+        }
+        
+        .form-group input,
+        .form-group textarea {
+            width: 100%;
+            padding: 12px;
+            border: none;
+            background-color: rgba(255,255,255,0.1);
+            color: white;
+            border-radius: 5px;
+            font-size: 14px;
+        }
+        
+        .form-group input::placeholder,
+        .form-group textarea::placeholder {
+            color: rgba(255,255,255,0.5);
+        }
+        
+        .form-group textarea {
+            height: 100px;
+            resize: vertical;
+        }
+        
+        .form-group .btn {
+            background-color: var(--primary);
+            color: white;
+            border: none;
+            cursor: pointer;
+            padding: 12px 20px;
+            font-weight: 600;
+        }
+        
+        .form-group .btn:hover {
+            background-color: var(--primary-dark);
+        }
+        
+        /* Media Queries */
+        @media screen and (max-width: 1024px) {
+            .about-content {
+                flex-direction: column;
+            }
+            
+            .about-image {
+                margin-bottom: 30px;
+            }
+            
+            .membership-cards {
+                flex-direction: column;
+                align-items: center;
+            }
+            
+            .membership-card {
+                width: 100%;
+                max-width: 350px;
+            }
+        }
+        
+        @media screen and (max-width: 768px) {
+            .nav-links {
+                position: absolute;
+                top: 70px;
+                left: 0;
+                background-color: white;
+                width: 100%;
+                flex-direction: column;
+                align-items: center;
+                padding: 20px 0;
+                transform: translateY(-150%);
+                transition: transform 0.3s ease;
+                box-shadow: 0 5px 10px rgba(0,0,0,0.1);
+                z-index: -1;
+            }
+            
+            .nav-links.active {
+                transform: translateY(0);
+            }
+            
+            .nav-links li {
+                margin: 15px 0;
+            }
+            
+            .hamburger {
+                display: block;
+                margin-left: 20px;
+            }
+            
+            .hamburger.active div:nth-child(1) {
+                transform: rotate(-45deg) translate(-5px, 6px);
+            }
+            
+            .hamburger.active div:nth-child(2) {
+                opacity: 0;
+            }
+            
+            .hamburger.active div:nth-child(3) {
+                transform: rotate(45deg) translate(-5px, -6px);
+            }
+            
+            .auth-buttons {
+                margin-left: auto;
+            }
+            
+            .hero h1 {
+                font-size: 36px;
+            }
+            
+            .hero p {
+                font-size: 16px;
+            }
+            
+            .section-title h2 {
+                font-size: 28px;
+            }
+            
+            .footer-column {
+                flex: 0 0 100%;
+                margin-bottom: 40px;
+            }
+            
+            .classes-grid {
+                grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header class="header">
+        <div class="nav-container">
+            <div class="logo">
+                <img src="../Imagenes/Logo.png" alt="FREEFIT Logo">
+                <a href="index.html">FREEFIT</a>
+            </div>
+            
+            <div class="hamburger">
+                <div></div>
+                <div></div>
+                <div></div>
+            </div>
+            
+            <ul class="nav-links">
+                <li><a href="#home">Inicio</a></li>
+                <li><a href="#about">Nosotros</a></li>
+                <li><a href="#memberships">Planes</a></li>
+                <li><a href="#classes">Clases</a></li>
+                <li><a href="#testimonials">Testimonios</a></li>
+                <li><a href="#footer">Contacto</a></li>
+            </ul>
+            
+            <div class="auth-buttons">
+                <a href="login.html" class="btn btn-outline">Iniciar sesión</a>
+                <a href="registrarse.html" class="btn btn-primary">Registrarse</a>
+            </div>
+        </div>
+    </header>
+
+    <!-- Hero Section -->
+    <section class="hero" id="home">
+        <div class="container">
+            <div class="hero-content">
+                <h1>TRANSFORMA TU CUERPO, <br>TRANSFORMA TU VIDA</h1>
+                <p>En FREEFIT te ayudamos a alcanzar tus objetivos fitness con instalaciones de primera y entrenadores profesionales.</p>
+                <div class="hero-buttons">
+                    <a href="#memberships" class="btn btn-primary">Ver nuestros planes</a>
+                    <a href="registrarse.html" class="btn btn-outline" style="color: white; border-color: white;">¡Inscríbete hoy!</a>
+                </div>
+            </div>
+        </div>
+    </section>
+    
+    <!-- About Section -->
+    <section class="about" id="about">
+        <div class="container">
+            <div class="section-title">
+                <h2>Sobre Nosotros</h2>
+            </div>
+            <div class="about-content">
+                <div class="about-image">
+                    <img src="../Imagenes/MejorVersion.jpg" alt="FREEFIT Gym">
+                </div>
+                <div class="about-text">
+                    <h3>Tu mejor versión comienza aquí</h3>
+                    <p>En FREEFIT creemos que el fitness es para todos. Desde 2015, hemos creado un espacio donde cada persona puede alcanzar sus metas físicas en un ambiente motivador y amigable.</p>
+                    <p>Nuestras instalaciones modernas y equipos de última generación, combinados con entrenadores expertos, te brindarán la mejor experiencia fitness de la ciudad.</p>
+                    <div class="features">
+                        <div class="feature">
+                            <i class="fas fa-dumbbell"></i>
+                            <div class="feature-text">
+                                <h4>Equipamiento moderno</h4>
+                                <p>Máquinas y equipos de última generación</p>
+                            </div>
+                        </div>
+                        <div class="feature">
+                            <i class="fas fa-users"></i>
+                            <div class="feature-text">
+                                <h4>Entrenadores profesionales</h4>
+                                <p>Equipo certificado y con experiencia</p>
+                            </div>
+                        </div>
+                        <div class="feature">
+                            <i class="fas fa-clock"></i>
+                            <div class="feature-text">
+                                <h4>Horario extendido</h4>
+                                <p>Abierto de 5:00 AM a 11:00 PM</p>
+                            </div>
+                        </div>
+                        <div class="feature">
+                            <i class="fas fa-heartbeat"></i>
+                            <div class="feature-text">
+                                <h4>Programas personalizados</h4>
+                                <p>Rutinas adaptadas a tus metas</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    
+    <!-- Memberships Section -->
+    <section class="memberships" id="memberships">
+        <div class="container">
+            <div class="section-title">
+                <h2>Nuestros Planes</h2>
+            </div>
+            <div class="membership-cards">
+                <div class="membership-card bronze-card">
+                    <div class="card-header">
+                        <img src="../Imagenes/LogoMembresiaBronce.png" alt="Plan Bronce">
+                        <h3>Plan Bronce</h3>
+                        <div class="price">$150.000<span>/mes</span></div>
+                    </div>
+                    <div class="card-body">
+                        <ul class="features-list">
+                            <li><i class="fas fa-check"></i> Acceso a zona de pesas</li>
+                            <li><i class="fas fa-check"></i> Área cardiovascular</li>
+                            <li><i class="fas fa-check"></i> Horario limitado (8AM-6PM)</li>
+                            <li><i class="fas fa-check"></i> 1 clase grupal por semana</li>
+                            <li><i class="fas fa-times"></i> Sin entrenador personal</li>
+                            <li><i class="fas fa-times"></i> Sin acceso a sauna/spa</li>
+                        </ul>
+                        <a href="registrarse.html" class="btn btn-outline">¡Empieza ahora!</a>
+                    </div>
+                </div>
+                
+                <div class="membership-card silver-card">
+                    <div class="popular-badge">Popular</div>
+                    <div class="card-header">
+                        <img src="../Imagenes/LogoMembresiaPlata.png" alt="Plan Plata">
+                        <h3>Plan Plata</h3>
+                        <div class="price">$250.000<span>/mes</span></div>
+                    </div>
+                    <div class="card-body">
+                        <ul class="features-list">
+                            <li><i class="fas fa-check"></i> Acceso ilimitado al gimnasio</li>
+                            <li><i class="fas fa-check"></i> Todas las áreas de entrenamiento</li>
+                            <li><i class="fas fa-check"></i> 3 clases grupales por semana</li>
+                            <li><i class="fas fa-check"></i> 1 sesión con entrenador personal</li>
+                            <li><i class="fas fa-check"></i> Acceso a sauna (2 veces/semana)</li>
+                            <li><i class="fas fa-times"></i> Sin evaluación nutricional</li>
+                        </ul>
+                        <a href="registrarse.html" class="btn btn-primary">¡Empieza ahora!</a>
+                    </div>
+                </div>
+                
+                <div class="membership-card gold-card">
+                    <div class="card-header">
+                        <img src="../Imagenes/LogoMembresiaOro.png" alt="Plan Oro">
+                        <h3>Plan Oro</h3>
+                        <div class="price">$350.000<span>/mes</span></div>
+                    </div>
+                    <div class="card-body">
+                        <ul class="features-list">
+                            <li><i class="fas fa-check"></i> Acceso VIP 24/7</li>
+                            <li><i class="fas fa-check"></i> Clases grupales ilimitadas</li>
+                            <li><i class="fas fa-check"></i> 4 sesiones con entrenador personal</li>
+                            <li><i class="fas fa-check"></i> Plan nutricional personalizado</li>
+                            <li><i class="fas fa-check"></i> Acceso ilimitado a sauna/spa</li>
+                            <li><i class="fas fa-check"></i> 1 invitado gratis por semana</li>
+                        </ul>
+                        <a href="registrarse.html" class="btn btn-outline">¡Empieza ahora!</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    
+    <!-- Classes Section -->
+    <section class="classes" id="classes">
+        <div class="container">
+            <div class="section-title">
+                <h2>Nuestras Clases</h2>
+            </div>
+            <div class="classes-grid">
+                <div class="class-card">
+                    <div class="class-image">
+                        <img src="../Imagenes/CrossFitGYM.jpg" alt="CrossFit Class">
+                    </div>
+                    <div class="class-content">
+                        <h3>CrossFit</h3>
+                        <p>Entrenamiento de alta intensidad que combina levantamiento de pesas, movimientos gimnásticos y ejercicios cardiovasculares.</p>
+                        <div class="class-schedule">
+                            <i class="fas fa-calendar"></i>
+                            <span>Lun, Mie, Vie - 7:00AM, 6:00PM</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="class-card">
+                    <div class="class-image">
+                        <img src="../Imagenes/YogaGYM.jpg" alt="Yoga Class">
+                    </div>
+                    <div class="class-content">
+                        <h3>Yoga</h3>
+                        <p>Mejora tu flexibilidad, equilibrio y fuerza mientras reduces el estrés y aumentas la conciencia corporal.</p>
+                        <div class="class-schedule">
+                            <i class="fas fa-calendar"></i>
+                            <span>Mar, Jue - 8:00AM, 7:00PM</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="class-card">
+                    <div class="class-image">
+                        <img src="../Imagenes/SpinningGYM.jpg" alt="Spinning Class">
+                    </div>
+                    <div class="class-content">
+                        <h3>Spinning</h3>
+                        <p>Clase de ciclismo indoor de alto rendimiento con música motivadora para mejorar tu resistencia cardiovascular.</p>
+                        <div class="class-schedule">
+                            <i class="fas fa-calendar"></i>
+                            <span>Todos los días - 6:00AM, 7:00PM</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="class-card">
+                    <div class="class-image">
+                        <img src="../Imagenes/ZumbaGYM.png" alt="Zumba Class">
+                    </div>
+                    <div class="class-content">
+                        <h3>Zumba</h3>
+                        <p>Divertida clase de baile que combina ritmos latinos con ejercicios aeróbicos para quemar calorías.</p>
+                        <div class="class-schedule">
+                            <i class="fas fa-calendar"></i>
+                            <span>Mar, Jue, Sáb - 6:00PM, 10:00AM</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="class-card">
+                    <div class="class-image">
+                        <img src="../Imagenes/BoxeoGYM1.jpeg" alt="Boxing Class">
+                    </div>
+                    <div class="class-content">
+                        <h3>Boxeo</h3>
+                        <p>Aprende técnicas de boxeo mientras ejercitas todo tu cuerpo en esta clase de alta intensidad.</p>
+                        <div class="class-schedule">
+                            <i class="fas fa-calendar"></i>
+                            <span>Lun, Mie, Vie - 7:00PM</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="class-card">
+                    <div class="class-image">
+                        <img src="../Imagenes/PilatesGYM.jpg" alt="Pilates Class">
+                    </div>
+                    <div class="class-content">
+                        <h3>Pilates</h3>
+                        <p>Fortalece tu núcleo, mejora la postura y aumenta la flexibilidad con este método de entrenamiento enfocado.</p>
+                        <div class="class-schedule">
+                            <i class="fas fa-calendar"></i>
+                            <span>Mar, Jue - 9:00AM, 5:00PM</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    
+    <!-- Testimonials Section -->
+    <section class="testimonials" id="testimonials">
+        <div class="container">
+            <div class="section-title">
+                <h2>Lo Que Dicen Nuestros Miembros</h2>
+            </div>
+            <div class="testimonial-cards">
+                <div class="testimonial-card">
+                    <p>"He probado varios gimnasios en la ciudad, pero FREEFIT es simplemente el mejor. Los entrenadores son increíblemente profesionales y las instalaciones son de primera calidad. En solo 3 meses logré resultados que no había conseguido en años."</p>
+                    <div class="testimonial-author">
+                        <img src="../Imagenes/ClienteGYM.png" alt="Cliente satisfecho">
+                        <div class="author-info">
+                            <h4>Carlos Ramírez</h4>
+                            <span>Miembro desde 2022</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="testimonial-card">
+                    <p>"Me encanta el ambiente de FREEFIT. Los instructores siempre están dispuestos a ayudar y el plan nutricional que recibí con mi membresía Oro ha transformado completamente mi alimentación. ¡He perdido 15 kilos en 6 meses!"</p>
+                    <div class="testimonial-author">
+                        <img src="../Imagenes/ClienteGYM.png" alt="Cliente satisfecho">
+                        <div class="author-info">
+                            <h4>Laura Mendoza</h4>
+                            <span>Miembro desde 2021</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="testimonial-card">
+                    <p>"Las clases de CrossFit son increíbles. El entrenador Juan me ha ayudado a superar mis límites y ahora puedo hacer ejercicios que nunca pensé que lograría. La comunidad de FREEFIT es como una segunda familia."</p>
+                    <div class="testimonial-author">
+                        <img src="../Imagenes/ClienteGYM.png" alt="Cliente satisfecho">
+                        <div class="author-info">
+                            <h4>Andrés Gutiérrez</h4>
+                            <span>Miembro desde 2023</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="testimonial-card">
+                    <p>"Como principiante, tenía miedo de unirme a un gimnasio. En FREEFIT me hicieron sentir bienvenida desde el primer día. Mi entrenadora personal diseñó un programa perfecto para mis necesidades y ahora vengo 5 días a la semana."</p>
+                    <div class="testimonial-author">
+                        <img src="../Imagenes/ClienteGYM.png" alt="Cliente satisfecho">
+                        <div class="author-info">
+                            <h4>María Fernanda López</h4>
+                            <span>Miembro desde 2023</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    
+    <!-- Call to Action Section -->
+    <section class="cta">
+        <div class="container">
+            <h2>¿Estás listo para cambiar tu vida?</h2>
+            <p>Únete a nuestra comunidad fitness y comienza tu transformación hoy mismo. Ofrecemos una sesión de prueba gratuita para que experimentes todo lo que FREEFIT tiene para ti.</p>
+            <a href="registrarse.html" class="btn">¡INSCRÍBETE AHORA!</a>
+        </div>
+    </section>
+    
+    <!-- Footer -->
+    <footer class="footer" id="footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-column">
+                    <h3>FREEFIT</h3>
+                    <p>Transformamos vidas a través del fitness y el bienestar. Nuestro compromiso es ayudarte a alcanzar tus metas con instalaciones modernas y entrenadores profesionales.</p>
+                    <div class="social-links">
+                        <a href="#"><i class="fab fa-facebook-f"></i></a>
+                        <a href="#"><i class="fab fa-instagram"></i></a>
+                        <a href="#"><i class="fab fa-twitter"></i></a>
+                        <a href="#"><i class="fab fa-youtube"></i></a>
+                    </div>
+                </div>
+                
+                <div class="footer-column">
+                    <h3>Enlaces Rápidos</h3>
+                    <ul class="footer-links">
+                        <li><a href="#home">Inicio</a></li>
+                        <li><a href="#about">Nosotros</a></li>
+                        <li><a href="#memberships">Planes y Precios</a></li>
+                        <li><a href="#classes">Clases</a></li>
+                        <li><a href="#testimonials">Testimonios</a></li>
+                        <li><a href="registrarse.html">Registrarse</a></li>
+                        <li><a href="login.html">Iniciar Sesión</a></li>
+                    </ul>
+                </div>
+                
+                <div class="footer-column">
+                    <h3>Horarios</h3>
+                    <ul class="footer-links">
+                        <li>Lunes - Viernes: 5:00 AM - 11:00 PM</li>
+                        <li>Sábados: 7:00 AM - 10:00 PM</li>
+                        <li>Domingos: 8:00 AM - 8:00 PM</li>
+                        <li>Feriados: 8:00 AM - 6:00 PM</li>
+                    </ul>
+                </div>
+                
+                <div class="footer-column">
+                    <h3>Contáctanos</h3>
+                    <ul class="footer-links">
+                        <li><i class="fas fa-map-marker-alt"></i> Av. Principal #123, Ciudad</li>
+                        <li><i class="fas fa-phone"></i> +57 123 456 7890</li>
+                        <li><i class="fas fa-envelope"></i> info@freefit.com</li>
+                    </ul>
+                    
+                    <h3>Reportes y Quejas</h3>
+                    <form class="contact-form">
+                        <div class="form-group">
+                            <input type="text" placeholder="Nombre" required>
+                        </div>
+                        <div class="form-group">
+                            <input type="email" placeholder="Email" required>
+                        </div>
+                        <div class="form-group">
+                            <textarea placeholder="Tu mensaje" required></textarea>
+                        </div>
+                        <div class="form-group">
+                            <button type="submit" class="btn">Enviar</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+            
+            <div class="footer-bottom">
+                <p>&copy; 2025 FREEFIT. Todos los derechos reservados.</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Script incrustado directamente -->
+    <script>
+    document.addEventListener('DOMContentLoaded', function() {
+        // Referencias a elementos
+        const header = document.querySelector('.header');
+        const hamburger = document.querySelector('.hamburger');
+        const navLinks = document.querySelector('.nav-links');
+        const contactForm = document.querySelector('.contact-form');
+        
+        // Cambiar estilo de la barra de navegación al desplazarse
+        window.addEventListener('scroll', function() {
+            if (window.scrollY > 50) {
+                header.classList.add('scrolled');
+            } else {
+                header.classList.remove('scrolled');
+            }
+        });
+        
+        // Control del menú hamburguesa para dispositivos móviles
+        if (hamburger) {
+            hamburger.addEventListener('click', function() {
+                navLinks.classList.toggle('active');
+                hamburger.classList.toggle('active');
+            });
+        }
+        
+        // Cerrar menú al hacer clic en un enlace
+        document.querySelectorAll('.nav-links a').forEach(link => {
+            link.addEventListener('click', () => {
+                navLinks.classList.remove('active');
+                hamburger.classList.remove('active');
+            });
+        });
+        
+        // Scroll suave para los enlaces internos
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function(e) {
+                e.preventDefault();
+                
+                const targetId = this.getAttribute('href');
+                if (targetId === '#') return;
+                
+                const targetElement = document.querySelector(targetId);
+                if (targetElement) {
+                    window.scrollTo({
+                        top: targetElement.offsetTop - 70,
+                        behavior: 'smooth'
+                    });
+                }
+            });
+        });
+        
+        // Formulario de contacto
+        if (contactForm) {
+            contactForm.addEventListener('submit', function(e) {
+                e.preventDefault();
+                alert('¡Gracias por contactarnos! Te responderemos a la brevedad.');
+                contactForm.reset();
+            });
+        }
+    });
+    </script>
+</body>
+</html>
+``` 

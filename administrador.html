@@ -1,0 +1,552 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Panel Administrativo - FREEFIT</title>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        :root {
+            --primary: #65A6D6;
+            --primary-dark: #4a90d6;
+            --secondary: #B3DDF2;
+            --success: #28a745;
+            --danger: #dc3545;
+            --warning: #ffc107;
+            --light: #f8f9fa;
+            --dark: #343a40;
+            --white: #ffffff;
+            --border: #dee2e6;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Roboto', sans-serif;
+            background-color: var(--light);
+            color: var(--dark);
+        }
+        
+        .dashboard {
+            display: flex;
+            min-height: 100vh;
+        }
+        
+        /* Sidebar */
+        .sidebar {
+            width: 250px;
+            background: linear-gradient(to bottom, var(--primary), var(--primary-dark));
+            color: var(--white);
+            padding: 20px 0;
+            transition: all 0.3s;
+        }
+        
+        .sidebar-header {
+            padding: 20px;
+            text-align: center;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        
+        .sidebar-header img {
+            width: 120px;
+            margin-bottom: 10px;
+        }
+        
+        .sidebar-header h3 {
+            margin: 0;
+            font-size: 18px;
+        }
+        
+        .sidebar-menu {
+            padding: 20px 0;
+        }
+        
+        .menu-item {
+            padding: 15px 20px;
+            border-left: 4px solid transparent;
+            transition: all 0.3s;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+        }
+        
+        .menu-item i {
+            margin-right: 10px;
+            width: 20px;
+            text-align: center;
+        }
+        
+        .menu-item:hover {
+            background-color: rgba(255, 255, 255, 0.1);
+            border-left-color: var(--white);
+        }
+        
+        .menu-item.active {
+            background-color: rgba(255, 255, 255, 0.2);
+            border-left-color: var(--white);
+            font-weight: bold;
+        }
+        
+        /* Main Content */
+        .main-content {
+            flex: 1;
+            padding: 20px;
+            overflow-y: auto;
+        }
+        
+        .top-bar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            padding-bottom: 20px;
+            border-bottom: 1px solid var(--border);
+        }
+        
+        .user-info {
+            display: flex;
+            align-items: center;
+        }
+        
+        .user-info img {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            margin-right: 10px;
+        }
+        
+        /* Section Styles */
+        .section {
+            display: none;
+            animation: fadeIn 0.5s;
+        }
+        
+        .section.active {
+            display: block;
+        }
+        
+        .section-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+        
+        .section-title {
+            font-size: 1.5rem;
+            color: var(--primary-dark);
+        }
+        
+        .btn {
+            padding: 10px 15px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-weight: 500;
+            transition: all 0.3s;
+        }
+        
+        .btn-primary {
+            background-color: var(--primary);
+            color: var(--white);
+        }
+        
+        .btn-primary:hover {
+            background-color: var(--primary-dark);
+        }
+        
+        .btn-success {
+            background-color: var(--success);
+            color: var(--white);
+        }
+        
+        .btn-success:hover {
+            background-color: #218838;
+        }
+        
+        .btn-danger {
+            background-color: var(--danger);
+            color: var(--white);
+        }
+        
+        .btn-danger:hover {
+            background-color: #c82333;
+        }
+        
+        .btn-warning {
+            background-color: var(--warning);
+            color: var(--dark);
+        }
+        
+        .btn-warning:hover {
+            background-color: #e0a800;
+        }
+        
+        /* Card */
+        .card {
+            background-color: var(--white);
+            border-radius: 8px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            margin-bottom: 20px;
+            overflow: hidden;
+        }
+        
+        .card-header {
+            padding: 15px 20px;
+            background-color: var(--primary);
+            color: var(--white);
+            font-weight: 500;
+        }
+        
+        .card-body {
+            padding: 20px;
+        }
+        
+        /* Table */
+        .table-container {
+            width: 100%;
+            overflow-x: auto;
+        }
+        
+        .table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        
+        .table thead th {
+            background-color: #f8f9fa;
+            padding: 12px 15px;
+            text-align: left;
+            border-bottom: 1px solid var(--border);
+            font-weight: 500;
+        }
+        
+        .table tbody td {
+            padding: 12px 15px;
+            border-bottom: 1px solid var(--border);
+            vertical-align: middle;
+        }
+        
+        .table tbody tr:hover {
+            background-color: rgba(101, 166, 214, 0.05);
+        }
+        
+        /* Forms */
+        .form-group {
+            margin-bottom: 20px;
+        }
+        
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 500;
+        }
+        
+        .form-control {
+            width: 100%;
+            padding: 10px 12px;
+            border: 1px solid var(--border);
+            border-radius: 4px;
+            font-size: 16px;
+        }
+        
+        .form-control:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 2px rgba(101, 166, 214, 0.25);
+        }
+        
+        /* Status Badges */
+        .badge {
+            display: inline-block;
+            padding: 5px 10px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 500;
+        }
+        
+        .badge-success {
+            background-color: rgba(40, 167, 69, 0.1);
+            color: var(--success);
+        }
+        
+        .badge-danger {
+            background-color: rgba(220, 53, 69, 0.1);
+            color: var(--danger);
+        }
+        
+        /* Modal */
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            overflow: auto;
+        }
+        
+        .modal-content {
+            background-color: var(--white);
+            margin: 10% auto;
+            padding: 20px;
+            width: 90%;
+            max-width: 600px;
+            border-radius: 8px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+            position: relative;
+        }
+        
+        .close-modal {
+            position: absolute;
+            right: 15px;
+            top: 10px;
+            font-size: 24px;
+            cursor: pointer;
+            color: #aaa;
+        }
+        
+        .close-modal:hover {
+            color: var(--dark);
+        }
+        
+        .action-buttons {
+            display: flex;
+            gap: 8px;
+        }
+        
+        .btn-icon {
+            padding: 6px 8px;
+            font-size: 14px;
+            border-radius: 4px;
+        }
+        
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+            }
+            to {
+                opacity: 1;
+            }
+        }
+
+        .hidden {
+            display: none;
+        }
+    </style>
+</head>
+<body>
+    <div class="dashboard">
+        <!-- Sidebar -->
+        <div class="sidebar">
+            <div class="sidebar-header">
+                <img src="../Imagenes/Logo.png" alt="FREEFIT Logo">
+                <h3>Panel Administrativo</h3>
+            </div>
+            <div class="sidebar-menu">
+                <div class="menu-item active" id="menu-usuarios">
+                    <i class="fas fa-users"></i>
+                    <span>Usuarios</span>
+                </div>
+                <div class="menu-item" id="menu-roles">
+                    <i class="fas fa-user-tag"></i>
+                    <span>Roles</span>
+                </div>
+                <div class="menu-item" id="menu-membresias">
+                    <i class="fas fa-id-card"></i>
+                    <span>Membresías</span>
+                </div>
+                <div class="menu-item" id="menu-config">
+                    <i class="fas fa-cog"></i>
+                    <span>Configuración</span>
+                </div>
+                <div class="menu-item" id="menu-logout">
+                    <i class="fas fa-sign-out-alt"></i>
+                    <span>Cerrar Sesión</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Main Content -->
+        <div class="main-content">
+            <div class="top-bar">
+                <h2>Panel de Control</h2>
+                <div class="user-info">
+                    <img src="../Imagenes/LogoPerfil.png" alt="Admin">
+                    <span>Administrador</span>
+                </div>
+            </div>
+
+            <!-- Sección de Usuarios -->
+            <div class="section active" id="section-usuarios">
+                <div class="section-header">
+                    <h3 class="section-title">Gestión de Usuarios</h3>
+                    <button class="btn btn-primary" id="btn-agregar-usuario">
+                        <i class="fas fa-plus"></i> Nuevo Usuario
+                    </button>
+                </div>
+
+                <div class="card">
+                    <div class="card-header">
+                        Lista de Usuarios
+                    </div>
+                    <div class="card-body">
+                        <div class="table-container">
+                            <table class="table" id="tabla-usuarios">
+                                <thead>
+                                    <tr>
+                                        <th>ID</th>
+                                        <th>Nombre</th>
+                                        <th>Email</th>
+                                        <th>Teléfono</th>
+                                        <th>Rol</th>
+                                        <th>Estado</th>
+                                        <th>Acciones</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="usuarios-body">
+                                    <!-- Los datos se cargarán dinámicamente -->
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Sección de Roles -->
+            <div class="section" id="section-roles">
+                <div class="section-header">
+                    <h3 class="section-title">Gestión de Roles</h3>
+                </div>
+                <div class="card">
+                    <div class="card-header">
+                        Asignación de Roles
+                    </div>
+                    <div class="card-body">
+                        <p>Esta sección permite definir los roles de usuario en el sistema.</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Sección de Membresías -->
+            <div class="section" id="section-membresias">
+                <div class="section-header">
+                    <h3 class="section-title">Gestión de Membresías</h3>
+                </div>
+                <div class="card">
+                    <div class="card-header">
+                        Planes y Membresías
+                    </div>
+                    <div class="card-body">
+                        <p>Gestión de planes y membresías del gimnasio.</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Sección de Configuración -->
+            <div class="section" id="section-config">
+                <div class="section-header">
+                    <h3 class="section-title">Configuración del Sistema</h3>
+                </div>
+                <div class="card">
+                    <div class="card-header">
+                        Configuraciones Generales
+                    </div>
+                    <div class="card-body">
+                        <p>Configuraciones generales del sistema.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal para agregar usuario -->
+    <div class="modal" id="modal-usuario">
+        <div class="modal-content">
+            <span class="close-modal" id="close-modal">&times;</span>
+            <h3 id="modal-title">Agregar Nuevo Usuario</h3>
+            <form id="form-usuario" action="../Controller/UsuarioController.php" method="POST">
+                <input type="hidden" name="accion" id="form-accion" value="agregarUsuario">
+                <input type="hidden" name="usuarioId" id="usuarioId" value="0">
+
+                <div class="form-group">
+                    <label for="nombres">Nombres</label>
+                    <input type="text" class="form-control" id="nombres" name="Nombres" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="apellidos">Apellidos</label>
+                    <input type="text" class="form-control" id="apellidos" name="Apellidos" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="correo">Correo Electrónico</label>
+                    <input type="email" class="form-control" id="correo" name="CorreoElectronico" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="telefono">Teléfono</label>
+                    <input type="tel" class="form-control" id="telefono" name="Telefono" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="direccion">Dirección</label>
+                    <input type="text" class="form-control" id="direccion" name="Direccion" required>
+                </div>
+                
+                <div class="form-group" id="contrasena-group">
+                    <label for="contrasena">Contraseña</label>
+                    <input type="password" class="form-control" id="contrasena" name="Contrasena">
+                </div>
+                
+                <div class="form-group">
+                    <label for="rol">Rol</label>
+                    <select class="form-control" id="rol" name="TipoUsuario">
+                        <option value="Sin Rol">Sin Rol</option>
+                        <option value="Usuario">Usuario</option>
+                        <option value="Entrenador">Entrenador</option>
+                        <option value="Administrador">Administrador</option>
+                    </select>
+                </div>
+                
+                <div class="form-group">
+                    <label for="estado">Estado</label>
+                    <select class="form-control" id="estado" name="EstadoUsuario">
+                        <option value="Activo">Activo</option>
+                        <option value="Inactivo">Inactivo</option>
+                    </select>
+                </div>
+                
+                <button type="submit" class="btn btn-primary">Guardar</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Modal para confirmar eliminación -->
+    <div class="modal" id="modal-eliminar">
+        <div class="modal-content">
+            <span class="close-modal" id="close-modal-eliminar">&times;</span>
+            <h3>Confirmar Eliminación</h3>
+            <p>¿Está seguro de que desea eliminar este usuario? Esta acción no se puede deshacer.</p>
+            <form id="form-eliminar" action="../Controller/UsuarioController.php" method="POST">
+                <input type="hidden" name="accion" value="eliminarUsuario">
+                <input type="hidden" name="usuarioId" id="eliminar-usuarioId" value="0">
+                <div style="display: flex; justify-content: flex-end; gap: 10px; margin-top: 20px;">
+                    <button type="button" class="btn btn-primary" id="cancelar-eliminar">Cancelar</button>
+                    <button type="submit" class="btn btn-danger">Eliminar</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Referencia al archivo JavaScript externo -->
+    <script src="js/administrador.js"></script>
+</body>
+</html>

@@ -1,0 +1,379 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Recuperar Contraseña</title>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        html, body {
+            margin: 0;
+            font-family: 'Roboto', sans-serif;
+            text-align: center;
+            background: linear-gradient(to bottom, #65A6D6, #B3DDF2);
+            height: 100%;
+            width: 100%;
+            overflow: hidden;
+        }
+        .header {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            width: 100%;
+            padding: 10px 20px;
+            background-color: #65A6D6;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            box-sizing: border-box;
+        }
+        .header a {
+            font-size: 24px;
+            color: #fff;
+            margin: 0;
+            text-decoration: none;
+            font-weight: 700;
+        }
+        .container {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            height: calc(100% - 80px);
+            padding: 20px;
+            box-sizing: border-box;
+        }
+        .logo-container {
+            margin-bottom: 20px;
+        }
+        .logo {
+            width: 250px;
+            height: auto;
+        }
+        .recovery-form {
+            background-color: #fff;
+            border-radius: 8px;
+            padding: 30px;
+            width: 100%;
+            max-width: 400px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+        }
+        .recovery-form h2 {
+            color: #333;
+            margin-bottom: 20px;
+            font-size: 24px;
+        }
+        .recovery-form p {
+            color: #666;
+            margin-bottom: 20px;
+            font-size: 14px;
+            line-height: 1.5;
+        }
+        .form-group {
+            margin-bottom: 20px;
+            text-align: left;
+        }
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: bold;
+            color: #333;
+        }
+        .form-group input {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            box-sizing: border-box;
+            font-size: 16px;
+        }
+        .form-group input:focus {
+            outline: none;
+            border-color: #65A6D6;
+            box-shadow: 0 0 0 2px rgba(101, 166, 214, 0.2);
+        }
+        .btn {
+            background-color: #65A6D6;
+            color: white;
+            border: none;
+            padding: 12px 20px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 16px;
+            font-weight: bold;
+            width: 100%;
+            transition: background-color 0.3s;
+        }
+        .btn:hover {
+            background-color: #4a90d6;
+        }
+        .links {
+            text-align: center;
+            margin-top: 20px;
+            font-size: 14px;
+        }
+        .links a {
+            color: #65A6D6;
+            text-decoration: none;
+            transition: color 0.3s;
+        }
+        .links a:hover {
+            color: #4a90d6;
+            text-decoration: underline;
+        }
+        .alert {
+            padding: 10px;
+            border-radius: 4px;
+            margin-bottom: 20px;
+            display: none;
+        }
+        .alert-danger {
+            background-color: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
+        .alert-success {
+            background-color: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+        .recovery-steps {
+            display: flex;
+            flex-direction: column;
+        }
+        .step {
+            display: none;
+        }
+        .step.active {
+            display: block;
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <a href="index.html">Integración Financiera</a>
+    </div>
+    <div class="container">
+        <div class="logo-container">
+            <img src="../Imagenes/Logo.png" alt="Logo" class="logo">
+        </div>
+        <div class="recovery-form">
+            <h2>Recuperar Contraseña</h2>
+            <div id="alert" class="alert"></div>
+            
+            <div class="recovery-steps">
+                <!-- Paso 1: Solicitar correo electrónico -->
+                <div id="step1" class="step active">
+                    <p>Ingresa tu correo electrónico para recibir un código de verificación.</p>
+                    <form id="emailForm" action="../Controller/UsuarioController.php" method="POST">
+                        <input type="hidden" name="accion" value="recuperar">
+                        <div class="form-group">
+                            <label for="correo">Correo Electrónico</label>
+                            <input type="email" id="correo" name="correo" required>
+                        </div>
+                        <button type="submit" class="btn">Enviar Código</button>
+                    </form>
+                </div>
+                
+                <!-- Paso 2: Verificar código -->
+                <div id="step2" class="step">
+                    <p>Se ha enviado un código de verificación a tu correo electrónico. Por favor ingrésalo a continuación.</p>
+                    <form id="codeForm">
+                        <div class="form-group">
+                            <label for="codigo">Código de Verificación</label>
+                            <input type="text" id="codigo" name="codigo" required>
+                        </div>
+                        <button type="submit" class="btn">Verificar Código</button>
+                    </form>
+                </div>
+                
+                <!-- Paso 3: Nueva contraseña -->
+                <div id="step3" class="step">
+                    <p>Ingresa tu nueva contraseña.</p>
+                    <form id="passwordForm">
+                        <div class="form-group">
+                            <label for="nueva_contrasena">Nueva Contraseña</label>
+                            <input type="password" id="nueva_contrasena" name="nueva_contrasena" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="confirmar_contrasena">Confirmar Contraseña</label>
+                            <input type="password" id="confirmar_contrasena" name="confirmar_contrasena" required>
+                        </div>
+                        <button type="submit" class="btn">Cambiar Contraseña</button>
+                    </form>
+                </div>
+            </div>
+            
+            <div class="links">
+                <a href="login.html">Volver al inicio de sesión</a>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Referencia al archivo JavaScript externo -->
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const emailForm = document.getElementById('emailForm');
+            const codeForm = document.getElementById('codeForm');
+            const passwordForm = document.getElementById('passwordForm');
+            
+            const step1 = document.getElementById('step1');
+            const step2 = document.getElementById('step2');
+            const step3 = document.getElementById('step3');
+            
+            const alertBox = document.getElementById('alert');
+            
+            // Store email for later use
+            let userEmail = '';
+            
+            // Handle email submission (Step 1)
+            if (emailForm) {
+                emailForm.addEventListener('submit', function(e) {
+                    e.preventDefault();
+                    
+                    const correo = document.getElementById('correo').value.trim();
+                    userEmail = correo;
+                    
+                    // Basic email validation
+                    const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+                    if (!emailPattern.test(correo)) {
+                        showAlert('danger', 'Por favor ingrese un correo electrónico válido.');
+                        return;
+                    }
+                    
+                    // Send the email via AJAX
+                    fetch('../Controlador/UsuarioController.php', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/x-www-form-urlencoded',
+                        },
+                        body: new URLSearchParams({
+                            'accion': 'recuperar',
+                            'correo': correo
+                        })
+                    })
+                    .then(response => response.json())
+                    .then(data => {
+                        if (data.success) {
+                            // Move to step 2
+                            step1.classList.remove('active');
+                            step2.classList.add('active');
+                            showAlert('success', 'Código de verificación enviado. Por favor revise su correo electrónico.');
+                        } else {
+                            showAlert('danger', 'El correo electrónico no está registrado en el sistema.');
+                        }
+                    })
+                    .catch(error => {
+                        console.error('Error:', error);
+                        showAlert('danger', 'Ha ocurrido un error. Por favor intente nuevamente.');
+                    });
+                });
+            }
+            
+            // Handle verification code submission (Step 2)
+            if (codeForm) {
+                codeForm.addEventListener('submit', function(e) {
+                    e.preventDefault();
+                    
+                    const codigo = document.getElementById('codigo').value.trim();
+                    
+                    if (codigo === '') {
+                        showAlert('danger', 'Por favor ingrese el código de verificación.');
+                        return;
+                    }
+                    
+                    // Verify code via AJAX
+                    fetch('../Controlador/UsuarioController.php', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/x-www-form-urlencoded',
+                        },
+                        body: new URLSearchParams({
+                            'accion': 'verificarCodigo',
+                            'correo': userEmail,
+                            'codigo': codigo
+                        })
+                    })
+                    .then(response => response.json())
+                    .then(data => {
+                        if (data.success) {
+                            // Move to step 3
+                            step2.classList.remove('active');
+                            step3.classList.add('active');
+                            showAlert('success', 'Código verificado correctamente. Ingrese su nueva contraseña.');
+                        } else {
+                            showAlert('danger', 'El código de verificación es incorrecto o ha expirado.');
+                        }
+                    })
+                    .catch(error => {
+                        console.error('Error:', error);
+                        showAlert('danger', 'Ha ocurrido un error. Por favor intente nuevamente.');
+                    });
+                });
+            }
+            
+            // Handle new password submission (Step 3)
+            if (passwordForm) {
+                passwordForm.addEventListener('submit', function(e) {
+                    e.preventDefault();
+                    
+                    const nuevaContrasena = document.getElementById('nueva_contrasena').value;
+                    const confirmarContrasena = document.getElementById('confirmar_contrasena').value;
+                    
+                    // Check if passwords match
+                    if (nuevaContrasena !== confirmarContrasena) {
+                        showAlert('danger', 'Las contraseñas no coinciden.');
+                        return;
+                    }
+                    
+                    // Validate password strength (basic)
+                    if (nuevaContrasena.length < 6) {
+                        showAlert('danger', 'La contraseña debe tener al menos 6 caracteres.');
+                        return;
+                    }
+                    
+                    // Update password via AJAX
+                    fetch('../Controlador/UsuarioController.php', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/x-www-form-urlencoded',
+                        },
+                        body: new URLSearchParams({
+                            'accion': 'cambiarContrasena',
+                            'correo': userEmail,
+                            'contrasena': nuevaContrasena
+                        })
+                    })
+                    .then(response => response.json())
+                    .then(data => {
+                        if (data.success) {
+                            showAlert('success', 'Contraseña actualizada correctamente.');
+                            
+                            // Redirect to login page after 2 seconds
+                            setTimeout(function() {
+                                window.location.href = 'login.html?password_reset=true';
+                            }, 2000);
+                        } else {
+                            showAlert('danger', 'Ha ocurrido un error al actualizar la contraseña.');
+                        }
+                    })
+                    .catch(error => {
+                        console.error('Error:', error);
+                        showAlert('danger', 'Ha ocurrido un error. Por favor intente nuevamente.');
+                    });
+                });
+            }
+            
+            // Helper function to show alerts
+            function showAlert(type, message) {
+                alertBox.className = 'alert alert-' + type;
+                alertBox.textContent = message;
+                alertBox.style.display = 'block';
+                
+                // Auto hide after 5 seconds
+                setTimeout(function() {
+                    alertBox.style.display = 'none';
+                }, 5000);
+            }
+        });
+    </script>
+</body>
+</html>
