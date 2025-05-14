@@ -347,7 +347,7 @@
         <!-- Sidebar -->
         <div class="sidebar">
             <div class="sidebar-header">
-                <img src="../Imagenes/Logo.png" alt="FREEFIT Logo">
+                <img src="../Gimnasio/Imagenes/Logo.png" alt="FREEFIT Logo">
                 <h3>Panel Administrativo</h3>
             </div>
             <div class="sidebar-menu">
@@ -379,7 +379,7 @@
             <div class="top-bar">
                 <h2>Panel de Control</h2>
                 <div class="user-info">
-                    <img src="../Imagenes/LogoPerfil.png" alt="Admin">
+                    <img src="../Gimnasio/Imagenes/LogoPerfil.png" alt="Admin">
                     <span>Administrador</span>
                 </div>
             </div>
@@ -472,7 +472,7 @@
         <div class="modal-content">
             <span class="close-modal" id="close-modal">&times;</span>
             <h3 id="modal-title">Agregar Nuevo Usuario</h3>
-            <form id="form-usuario" action="../Controller/UsuarioController.php" method="POST">
+            <form id="form-usuario" action="../Gimnasio/Controller/UsuarioController.php" method="POST">
                 <input type="hidden" name="accion" id="form-accion" value="agregarUsuario">
                 <input type="hidden" name="usuarioId" id="usuarioId" value="0">
 
@@ -535,7 +535,7 @@
             <span class="close-modal" id="close-modal-eliminar">&times;</span>
             <h3>Confirmar Eliminación</h3>
             <p>¿Está seguro de que desea eliminar este usuario? Esta acción no se puede deshacer.</p>
-            <form id="form-eliminar" action="../Controller/UsuarioController.php" method="POST">
+            <form id="form-eliminar" action="../Gimnasio/Controller/UsuarioController.php" method="POST">
                 <input type="hidden" name="accion" value="eliminarUsuario">
                 <input type="hidden" name="usuarioId" id="eliminar-usuarioId" value="0">
                 <div style="display: flex; justify-content: flex-end; gap: 10px; margin-top: 20px;">
