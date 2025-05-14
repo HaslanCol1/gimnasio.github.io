@@ -1,0 +1,1787 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FreeFit - Portal del Cliente</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        :root {
+            --primary-color: #1a73e8;
+            --secondary-color: #34a853;
+            --accent-color: #fbbc05;
+            --light-bg: #f8f9fa;
+            --dark-bg: #212529;
+        }
+        
+        body {
+            font-family: 'Roboto', sans-serif;
+            background-color: #f4f6f9;
+            padding-top: 56px;
+        }
+        
+        .navbar-brand {
+            font-weight: 700;
+            color: var(--primary-color);
+        }
+        
+        .nav-link {
+            color: #495057;
+            font-weight: 500;
+        }
+        
+        .nav-link:hover {
+            color: var(--primary-color);
+        }
+        
+        .sidebar {
+            position: fixed;
+            top: 56px;
+            left: 0;
+            bottom: 0;
+            width: 250px;
+            padding: 20px;
+            background-color: white;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            z-index: 1000;
+            transition: all 0.3s;
+        }
+        
+        .sidebar .nav-link {
+            border-radius: 5px;
+            padding: 10px 15px;
+            margin-bottom: 5px;
+        }
+        
+        .sidebar .nav-link:hover {
+            background-color: #f0f4f8;
+        }
+        
+        .sidebar .nav-link.active {
+            background-color: #e7f1ff;
+            color: var(--primary-color);
+        }
+        
+        .sidebar .nav-link i {
+            margin-right: 10px;
+            width: 20px;
+            text-align: center;
+        }
+        
+        .main-content {
+            margin-left: 250px;
+            padding: 20px;
+            transition: all 0.3s;
+        }
+        
+        .card {
+            border: none;
+            border-radius: 10px;
+            box-shadow: 0 0 15px rgba(0, 0, 0, 0.05);
+            margin-bottom: 20px;
+            transition: transform 0.3s;
+        }
+        
+        .card:hover {
+            transform: translateY(-5px);
+        }
+        
+        .card-header {
+            background-color: white;
+            border-bottom: 1px solid #eaeaea;
+            font-weight: 600;
+        }
+        
+        .tab-content {
+            padding: 20px 0;
+        }
+        
+        .product-card {
+            cursor: pointer;
+        }
+        
+        .product-card img {
+            height: 200px;
+            object-fit: cover;
+        }
+        
+        .stats-card {
+            text-align: center;
+            padding: 15px;
+        }
+        
+        .stats-card i {
+            font-size: 2rem;
+            color: var(--primary-color);
+            margin-bottom: 10px;
+        }
+        
+        .stats-number {
+            font-size: 1.5rem;
+            font-weight: 700;
+        }
+        
+        .stats-text {
+            color: #6c757d;
+        }
+        
+        .class-card {
+            position: relative;
+        }
+        
+        .class-card .badge {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+        }
+        
+        .table th {
+            font-weight: 500;
+        }
+        
+        @media (max-width: 991.98px) {
+            .sidebar {
+                width: 80px;
+                padding: 10px;
+            }
+            
+            .sidebar .nav-link span {
+                display: none;
+            }
+            
+            .sidebar .nav-link i {
+                margin-right: 0;
+                font-size: 1.25rem;
+            }
+            
+            .main-content {
+                margin-left: 80px;
+            }
+        }
+        
+        @media (max-width: 767.98px) {
+            .sidebar {
+                transform: translateX(-100%);
+                box-shadow: none;
+            }
+            
+            .sidebar.show {
+                transform: translateX(0);
+                box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            }
+            
+            .main-content {
+                margin-left: 0;
+            }
+        }
+
+        .btn-primary {
+            background-color: var(--primary-color);
+            border-color: var(--primary-color);
+        }
+        
+        .btn-success {
+            background-color: var(--secondary-color);
+            border-color: var(--secondary-color);
+        }
+
+        .section-container {
+            display: none;
+        }
+        
+        .section-container.active {
+            display: block;
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar navbar-expand-lg navbar-light bg-white fixed-top shadow-sm">
+        <div class="container-fluid">
+            <a class="navbar-brand" href="#">
+                <i class="fas fa-dumbbell me-2"></i>FreeFit
+            </a>
+            <button class="navbar-toggler" type="button" id="sidebar-toggler">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            
+            <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item">
+                        <a class="nav-link" href="#" data-bs-toggle="modal" data-bs-target="#notificationsModal">
+                            <i class="fas fa-bell"></i>
+                        </a>
+                    </li>
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                            <img src="https://via.placeholder.com/30" class="rounded-circle me-2" width="30" height="30">
+                            <span>Mi Cuenta</span>
+                        </a>
+                        <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="userDropdown">
+                            <li><a class="dropdown-item" href="#"><i class="fas fa-user me-2"></i>Mi Perfil</a></li>
+                            <li><a class="dropdown-item" href="#"><i class="fas fa-cog me-2"></i>Configuración</a></li>
+                            <li><hr class="dropdown-divider"></li>
+                            <li><a class="dropdown-item" href="#"><i class="fas fa-sign-out-alt me-2"></i>Cerrar Sesión</a></li>
+                        </ul>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Sidebar -->
+    <div class="sidebar">
+        <ul class="nav flex-column">
+            <li class="nav-item">
+                <a class="nav-link active" href="#" onclick="showSection('dashboard')">
+                    <i class="fas fa-tachometer-alt"></i>
+                    <span>Dashboard</span>
+                </a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="#" onclick="showSection('products')">
+                    <i class="fas fa-shopping-cart"></i>
+                    <span>Productos</span>
+                </a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="#" onclick="showSection('classes')">
+                    <i class="fas fa-calendar-alt"></i>
+                    <span>Clases</span>
+                </a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="#" onclick="showSection('nutrition')">
+                    <i class="fas fa-apple-alt"></i>
+                    <span>Plan Nutricional</span>
+                </a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="#" onclick="showSection('training')">
+                    <i class="fas fa-running"></i>
+                    <span>Plan de Entreno</span>
+                </a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="#" onclick="showSection('profile')">
+                    <i class="fas fa-user"></i>
+                    <span>Mi Perfil</span>
+                </a>
+            </li>
+        </ul>
+    </div>
+
+    <!-- Main Content -->
+    <div class="main-content">
+        <!-- Dashboard Section -->
+        <div id="dashboard" class="section-container active">
+            <h2 class="mb-4">Dashboard</h2>
+            <div class="row mb-4">
+                <div class="col-md-3">
+                    <div class="card stats-card">
+                        <i class="fas fa-calendar-check"></i>
+                        <div class="stats-number">5</div>
+                        <div class="stats-text">Clases Asistidas</div>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="card stats-card">
+                        <i class="fas fa-shopping-bag"></i>
+                        <div class="stats-number">3</div>
+                        <div class="stats-text">Compras</div>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="card stats-card">
+                        <i class="fas fa-bolt"></i>
+                        <div class="stats-number">75%</div>
+                        <div class="stats-text">Progreso de Entrenamiento</div>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="card stats-card">
+                        <i class="fas fa-star"></i>
+                        <div class="stats-number">Plata</div>
+                        <div class="stats-text">Nivel de Membresía</div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="card">
+                        <div class="card-header d-flex justify-content-between align-items-center">
+                            <span>Próximas Clases</span>
+                            <a href="#" class="btn btn-sm btn-primary" onclick="showSection('classes')">Ver Todas</a>
+                        </div>
+                        <div class="card-body">
+                            <div class="list-group">
+                                <a href="#" class="list-group-item list-group-item-action">
+                                    <div class="d-flex w-100 justify-content-between">
+                                        <h6 class="mb-1">Spinning</h6>
+                                        <small>Hoy, 18:00</small>
+                                    </div>
+                                    <small>Instructor: Juan Pérez</small>
+                                </a>
+                                <a href="#" class="list-group-item list-group-item-action">
+                                    <div class="d-flex w-100 justify-content-between">
+                                        <h6 class="mb-1">Yoga</h6>
+                                        <small>Mañana, 10:00</small>
+                                    </div>
+                                    <small>Instructor: Ana Martínez</small>
+                                </a>
+                                <a href="#" class="list-group-item list-group-item-action">
+                                    <div class="d-flex w-100 justify-content-between">
+                                        <h6 class="mb-1">CrossFit</h6>
+                                        <small>Viernes, 17:30</small>
+                                    </div>
+                                    <small>Instructor: Carlos Rodríguez</small>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="card">
+                        <div class="card-header d-flex justify-content-between align-items-center">
+                            <span>Mi Plan Nutricional</span>
+                            <a href="#" class="btn btn-sm btn-primary" onclick="showSection('nutrition')">Ver Detalles</a>
+                        </div>
+                        <div class="card-body">
+                            <h5>Plan Actual: Definición muscular</h5>
+                            <p class="mb-2">Calorías diarias: 2,300 kcal</p>
+                            <p class="mb-3">Balance: 40% proteína, 30% carbohidratos, 30% grasas</p>
+                            <p class="mb-0"><strong>Próxima revisión:</strong> 15 de mayo, 2025</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Products Section -->
+        <div id="products" class="section-container">
+            <h2 class="mb-4">Productos FreeFit</h2>
+            <div class="row mb-4">
+                <div class="col-md-12">
+                    <div class="card">
+                        <div class="card-body">
+                            <div class="row">
+                                <div class="col-md-4">
+                                    <div class="input-group">
+                                        <input type="text" class="form-control" placeholder="Buscar productos...">
+                                        <button class="btn btn-outline-secondary" type="button"><i class="fas fa-search"></i></button>
+                                    </div>
+                                </div>
+                                <div class="col-md-8">
+                                    <div class="d-flex justify-content-end">
+                                        <div class="btn-group me-2">
+                                            <button type="button" class="btn btn-outline-secondary active">Todos</button>
+                                            <button type="button" class="btn btn-outline-secondary">Suplementos</button>
+                                            <button type="button" class="btn btn-outline-secondary">Ropa</button>
+                                            <button type="button" class="btn btn-outline-secondary">Accesorios</button>
+                                        </div>
+                                        <div class="dropdown">
+                                            <button class="btn btn-outline-secondary dropdown-toggle" type="button" id="sortDropdown" data-bs-toggle="dropdown" aria-expanded="false">
+                                                Ordenar por
+                                            </button>
+                                            <ul class="dropdown-menu" aria-labelledby="sortDropdown">
+                                                <li><a class="dropdown-item" href="#">Precio: Mayor a menor</a></li>
+                                                <li><a class="dropdown-item" href="#">Precio: Menor a mayor</a></li>
+                                                <li><a class="dropdown-item" href="#">Popularidad</a></li>
+                                                <li><a class="dropdown-item" href="#">Novedades</a></li>
+                                            </ul>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row">
+                <!-- Product 1 -->
+                <div class="col-md-4 mb-4">
+                    <div class="card product-card">
+                        <img src="https://via.placeholder.com/300x200?text=Proteina+FreeFit" class="card-img-top" alt="Proteína FreeFit">
+                        <div class="card-body">
+                            <h5 class="card-title">Proteína WheyFit Premium</h5>
+                            <div class="d-flex justify-content-between align-items-center mb-2">
+                                <span class="fw-bold text-primary">$49.99</span>
+                                <span class="badge bg-success">En stock</span>
+                            </div>
+                            <p class="card-text">Proteína de suero de leche de alta calidad, 25g por porción, 30 servicios.</p>
+                            <div class="d-grid">
+                                <button class="btn btn-primary">Añadir al carrito</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Product 2 -->
+                <div class="col-md-4 mb-4">
+                    <div class="card product-card">
+                        <img src="https://via.placeholder.com/300x200?text=Camiseta+FreeFit" class="card-img-top" alt="Camiseta FreeFit">
+                        <div class="card-body">
+                            <h5 class="card-title">Camiseta Técnica FreeFit</h5>
+                            <div class="d-flex justify-content-between align-items-center mb-2">
+                                <span class="fw-bold text-primary">$29.99</span>
+                                <span class="badge bg-success">En stock</span>
+                            </div>
+                            <p class="card-text">Camiseta de entrenamiento con tecnología de secado rápido, perfecta para cualquier actividad física.</p>
+                            <div class="d-grid">
+                                <button class="btn btn-primary">Añadir al carrito</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Product 3 -->
+                <div class="col-md-4 mb-4">
+                    <div class="card product-card">
+                        <img src="https://via.placeholder.com/300x200?text=Shaker+FreeFit" class="card-img-top" alt="Shaker FreeFit">
+                        <div class="card-body">
+                            <h5 class="card-title">Shaker Premium FreeFit</h5>
+                            <div class="d-flex justify-content-between align-items-center mb-2">
+                                <span class="fw-bold text-primary">$15.99</span>
+                                <span class="badge bg-warning text-dark">Pocas unidades</span>
+                            </div>
+                            <p class="card-text">Shaker de 600ml con filtro anti-grumos y compartimento para polvos adicionales.</p>
+                            <div class="d-grid">
+                                <button class="btn btn-primary">Añadir al carrito</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- More products -->
+                <div class="col-md-4 mb-4">
+                    <div class="card product-card">
+                        <img src="https://via.placeholder.com/300x200?text=BCAA+FreeFit" class="card-img-top" alt="BCAA FreeFit">
+                        <div class="card-body">
+                            <h5 class="card-title">BCAA 2:1:1 FreeFit</h5>
+                            <div class="d-flex justify-content-between align-items-center mb-2">
+                                <span class="fw-bold text-primary">$34.99</span>
+                                <span class="badge bg-success">En stock</span>
+                            </div>
+                            <p class="card-text">Aminoácidos de cadena ramificada que ayudan en la recuperación muscular, 40 servicios.</p>
+                            <div class="d-grid">
+                                <button class="btn btn-primary">Añadir al carrito</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="col-md-4 mb-4">
+                    <div class="card product-card">
+                        <img src="https://via.placeholder.com/300x200?text=Guantes+FreeFit" class="card-img-top" alt="Guantes FreeFit">
+                        <div class="card-body">
+                            <h5 class="card-title">Guantes de Entrenamiento</h5>
+                            <div class="d-flex justify-content-between align-items-center mb-2">
+                                <span class="fw-bold text-primary">$19.99</span>
+                                <span class="badge bg-success">En stock</span>
+                            </div>
+                            <p class="card-text">Guantes de entrenamiento con muñequera ajustable y alta sujeción para un agarre perfecto.</p>
+                            <div class="d-grid">
+                                <button class="btn btn-primary">Añadir al carrito</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="col-md-4 mb-4">
+                    <div class="card product-card">
+                        <img src="https://via.placeholder.com/300x200?text=Pre-Workout+FreeFit" class="card-img-top" alt="Pre-Workout FreeFit">
+                        <div class="card-body">
+                            <h5 class="card-title">Pre-Workout Explosive</h5>
+                            <div class="d-flex justify-content-between align-items-center mb-2">
+                                <span class="fw-bold text-primary">$39.99</span>
+                                <span class="badge bg-danger">Agotado</span>
+                            </div>
+                            <p class="card-text">Fórmula avanzada con cafeína, beta-alanina y citrulina para máxima energía durante el entrenamiento.</p>
+                            <div class="d-grid">
+                                <button class="btn btn-secondary" disabled>Agotado</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <nav aria-label="Page navigation">
+                <ul class="pagination justify-content-center">
+                    <li class="page-item disabled">
+                        <a class="page-link" href="#" tabindex="-1" aria-disabled="true">Anterior</a>
+                    </li>
+                    <li class="page-item active"><a class="page-link" href="#">1</a></li>
+                    <li class="page-item"><a class="page-link" href="#">2</a></li>
+                    <li class="page-item"><a class="page-link" href="#">3</a></li>
+                    <li class="page-item">
+                        <a class="page-link" href="#">Siguiente</a>
+                    </li>
+                </ul>
+            </nav>
+        </div>
+
+        <!-- Classes Section -->
+        <div id="classes" class="section-container">
+            <h2 class="mb-4">Clases Disponibles</h2>
+            <div class="row mb-4">
+                <div class="col-md-12">
+                    <div class="card">
+                        <div class="card-body">
+                            <div class="row">
+                                <div class="col-md-4">
+                                    <div class="input-group">
+                                        <input type="text" class="form-control" placeholder="Buscar clases...">
+                                        <button class="btn btn-outline-secondary" type="button"><i class="fas fa-search"></i></button>
+                                    </div>
+                                </div>
+                                <div class="col-md-8">
+                                    <div class="d-flex justify-content-end">
+                                        <div class="btn-group me-2">
+                                            <button type="button" class="btn btn-outline-secondary active">Todas</button>
+                                            <button type="button" class="btn btn-outline-secondary">Cardio</button>
+                                            <button type="button" class="btn btn-outline-secondary">Fuerza</button>
+                                            <button type="button" class="btn btn-outline-secondary">Flexibilidad</button>
+                                        </div>
+                                        <div class="dropdown">
+                                            <button class="btn btn-outline-secondary dropdown-toggle" type="button" id="weekDropdown" data-bs-toggle="dropdown" aria-expanded="false">
+                                                Esta semana
+                                            </button>
+                                            <ul class="dropdown-menu" aria-labelledby="weekDropdown">
+                                                <li><a class="dropdown-item" href="#">Esta semana</a></li>
+                                                <li><a class="dropdown-item" href="#">Próxima semana</a></li>
+                                                <li><a class="dropdown-item" href="#">Próximo mes</a></li>
+                                            </ul>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row">
+                <!-- Class 1 -->
+                <div class="col-md-4 mb-4">
+                    <div class="card class-card">
+                        <img src="https://via.placeholder.com/300x200?text=Spinning" class="card-img-top" alt="Spinning Class">
+                        <div class="badge bg-primary">Cardio</div>
+                        <div class="card-body">
+                            <h5 class="card-title">Spinning</h5>
+                            <p class="card-text">
+                                <i class="fas fa-calendar-alt me-2"></i>Lunes, Miércoles, Viernes<br>
+                                <i class="fas fa-clock me-2"></i>18:00 - 19:00<br>
+                                <i class="fas fa-user me-2"></i>Instructor: Juan Pérez<br>
+                                <i class="fas fa-users me-2"></i>Disponibles: 5/20
+                            </p>
+                            <div class="d-grid">
+                                <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#classRegistrationModal">Registrarse</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Class 2 -->
+                <div class="col-md-4 mb-4">
+                    <div class="card class-card">
+                        <img src="https://via.placeholder.com/300x200?text=Yoga" class="card-img-top" alt="Yoga Class">
+                        <div class="badge bg-success">Flexibilidad</div>
+                        <div class="card-body">
+                            <h5 class="card-title">Yoga</h5>
+                            <p class="card-text">
+                                <i class="fas fa-calendar-alt me-2"></i>Martes y Jueves<br>
+                                <i class="fas fa-clock me-2"></i>10:00 - 11:30<br>
+                                <i class="fas fa-user me-2"></i>Instructor: Ana Martínez<br>
+                                <i class="fas fa-users me-2"></i>Disponibles: 8/15
+                            </p>
+                            <div class="d-grid">
+                                <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#classRegistrationModal">Registrarse</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Class 3 -->
+                <div class="col-md-4 mb-4">
+                    <div class="card class-card">
+                        <img src="https://via.placeholder.com/300x200?text=CrossFit" class="card-img-top" alt="CrossFit Class">
+                        <div class="badge bg-warning text-dark">Fuerza</div>
+                        <div class="card-body">
+                            <h5 class="card-title">CrossFit</h5>
+                            <p class="card-text">
+                                <i class="fas fa-calendar-alt me-2"></i>Lunes a Viernes<br>
+                                <i class="fas fa-clock me-2"></i>17:30 - 18:30<br>
+                                <i class="fas fa-user me-2"></i>Instructor: Carlos Rodríguez<br>
+                                <i class="fas fa-users me-2"></i>Disponibles: 3/12
+                            </p>
+                            <div class="d-grid">
+                                <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#classRegistrationModal">Registrarse</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Class 4 -->
+                <div class="col-md-4 mb-4">
+                    <div class="card class-card">
+                        <img src="https://via.placeholder.com/300x200?text=Pilates" class="card-img-top" alt="Pilates Class">
+                        <div class="badge bg-success">Flexibilidad</div>
+                        <div class="card-body">
+                            <h5 class="card-title">Pilates</h5>
+                            <p class="card-text">
+                                <i class="fas fa-calendar-alt me-2"></i>Martes y Jueves<br>
+                                <i class="fas fa-clock me-2"></i>19:00 - 20:00<br>
+                                <i class="fas fa-user me-2"></i>Instructor: Laura Gómez<br>
+                                <i class="fas fa-users me-2"></i>Disponibles: 10/15
+                            </p>
+                            <div class="d-grid">
+                                <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#classRegistrationModal">Registrarse</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Class 5 -->
+                <div class="col-md-4 mb-4">
+                    <div class="card class-card">
+                        <img src="https://via.placeholder.com/300x200?text=Zumba" class="card-img-top" alt="Zumba Class">
+                        <div class="badge bg-primary">Cardio</div>
+                        <div class="card-body">
+                            <h5 class="card-title">Zumba</h5>
+                            <p class="card-text">
+                                <i class="fas fa-calendar-alt me-2"></i>Lunes, Miércoles, Viernes<br>
+                                <i class="fas fa-clock me-2"></i>20:00 - 21:00<br>
+                                <i class="fas fa-user me-2"></i>Instructor: Patricia Torres<br>
+                                <i class="fas fa-users me-2"></i>Disponibles: 12/25
+                            </p>
+                            <div class="d-grid">
+                                <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#classRegistrationModal">Registrarse</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Class 6 -->
+                <div class="col-md-4 mb-4">
+                    <div class="card class-card">
+                        <img src="https://via.placeholder.com/300x200?text=Body+Pump" class="card-img-top" alt="Body Pump Class">
+                        <div class="badge bg-warning text-dark">Fuerza</div>
+                        <div class="card-body">
+                            <h5 class="card-title">Body Pump</h5>
+                            <p class="card-text">
+                                <i class="fas fa-calendar-alt me-2"></i>Martes y Jueves<br>
+                                <i class="fas fa-clock me-2"></i>18:30 - 19:30<br>
+                                <i class="fas fa-user me-2"></i>Instructor: Miguel Ángel López<br>
+                                <i class="fas fa-users me-2"></i>Disponibles: 0/15
+                            </p>
+                            <div class="d-grid">
+                                <button class="btn btn-secondary" disabled>Clase Completa</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Nutrition Plan Section -->
+        <div id="nutrition" class="section-container">
+            <h2 class="mb-4">Plan Nutricional</h2>
+            
+            <div class="row mb-4">
+                <div class="col-md-8">
+                    <div class="card">
+                        <div class="card-header">
+                            <ul class="nav nav-tabs card-header-tabs" id="nutritionTab" role="tablist">
+                                <li class="nav-item" role="presentation">
+                                    <button class="nav-link active" id="current-plan-tab" data-bs-toggle="tab" data-bs-target="#current-plan" type="button" role="tab" aria-controls="current-plan" aria-selected="true">Mi Plan Actual</button>
+                                </li>
+                                <li class="nav-item" role="presentation">
+                                    <button class="nav-link" id="request-plan-tab" data-bs-toggle="tab" data-bs-target="#request-plan" type="button" role="tab" aria-controls="request-plan" aria-selected="false">Solicitar Nuevo Plan</button>
+                                </li>
+                                <li class="nav-item" role="presentation">
+                                    <button class="nav-link" id="history-plan-tab" data-bs-toggle="tab" data-bs-target="#history-plan" type="button" role="tab" aria-controls="history-plan" aria-selected="false">Historial</button>
+                                </li>
+                            </ul>
+                        </div>
+                        <div class="card-body">
+                            <div class="tab-content" id="nutritionTabContent">
+                                <div class="tab-pane fade show active" id="current-plan" role="tabpanel" aria-labelledby="current-plan-tab">
+                                    <h4 class="mb-3">Plan Nutricional: Definición Muscular</h4>
+                                    <p class="mb-3"><strong>Asignado por:</strong> Dr. Fernando Ruiz (Nutricionista)</p>
+                                    <p class="mb-3"><strong>Fecha de inicio:</strong> 15 de abril, 2025</p>
+                                    <p class="mb-3"><strong>Objetivo:</strong> Reducción de grasa corporal manteniendo masa muscular</p>
+                                    
+                                    <div class="row mb-3">
+                                        <div class="col-md-4">
+                                            <div class="card mb-3">
+                                                <div class="card-body text-center">
+                                                    <h5 class="card-title">Calorías Diarias</h5>
+                                                    <h2 class="text-primary">2,300</h2>
+                                                    <p>kilocalorías</p>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-8">
+                                            <div class="card">
+                                                <div class="card-body">
+                                                    <h5 class="card-title">Distribución de Macronutrientes</h5>
+                                                    <div class="row">
+                                                        <div class="col-md-4 text-center">
+                                                            <h6>Proteínas</h6>
+                                                            <h3 class="text-primary">40%</h3>
+                                                            <p>230g</p>
+                                                        </div>
+                                                        <div class="col-md-4 text-center">
+                                                            <h6>Carbohidratos</h6>
+                                                            <h3 class="text-success">30%</h3>
+                                                            <p>173g</p>
+                                                        </div>
+                                                        <div class="col-md-4 text-center">
+                                                            <h6>Grasas</h6>
+                                                            <h3 class="text-warning">30%</h3>
+                                                            <p>77g</p>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    
+                                    <h5 class="mt-4 mb-3">Plan Alimenticio Diario</h5>
+                                    <div class="accordion" id="mealPlanAccordion">
+                                        <div class="accordion-item">
+                                            <h2 class="accordion-header" id="desayunoHeading">
+                                                <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#desayunoContent" aria-expanded="true" aria-controls="desayunoContent">
+                                                    Desayuno (7:00 - 8:00)
+                                                </button>
+                                            </h2>
+                                            <div id="desayunoContent" class="accordion-collapse collapse show" aria-labelledby="desayunoHeading" data-bs-parent="#mealPlanAccordion">
+                                                <div class="accordion-body">
+                                                    <ul class="list-group list-group-flush">
+                                                        <li class="list-group-item">4 claras de huevo + 1 huevo entero</li>
+                                                        <li class="list-group-item">1 taza de avena</li>
+                                                        <li class="list-group-item">1 fruta (manzana o plátano)</li>
+                                                        <li class="list-group-item">Café negro o té verde sin azúcar</li>
+                                                    </ul>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        
+                                        <div class="accordion-item">
+                                            <h2 class="accordion-header" id="mediaMananaHeading">
+                                                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#mediaMananaContent" aria-expanded="false" aria-controls="mediaMananaContent">
+                                                    Media Mañana (10:30)
+                                                </button>
+                                            </h2>
+                                            <div id="mediaMananaContent" class="accordion-collapse collapse" aria-labelledby="mediaMananaHeading" data-bs-parent="#mealPlanAccordion">
+                                                <div class="accordion-body">
+                                                    <ul class="list-group list-group-flush">
+                                                        <li class="list-group-item">30g de proteína en polvo</li>
+                                                        <li class="list-group-item">1 puñado de frutos secos (almendras o nueces)</li>
+                                                    </ul>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        
+                                        <!-- More meals... -->
+                                        <div class="accordion-item">
+                                            <h2 class="accordion-header" id="almuerzoHeading">
+                                                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#almuerzoContent" aria-expanded="false" aria-controls="almuerzoContent">
+                                                    Almuerzo (13:00 - 14:00)
+                                                </button>
+                                            </h2>
+                                            <div id="almuerzoContent" class="accordion-collapse collapse" aria-labelledby="almuerzoHeading" data-bs-parent="#mealPlanAccordion">
+                                                <div class="accordion-body">
+                                                    <ul class="list-group list-group-flush">
+                                                        <li class="list-group-item">150g de pollo, pescado o carne magra</li>
+                                                        <li class="list-group-item">1 taza de arroz integral o 200g de patata</li>
+                                                        <li class="list-group-item">Ensalada verde abundante</li>
+                                                        <li class="list-group-item">1 cucharada de aceite de oliva</li>
+                                                    </ul>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="mt-4 text-center">
+                                        <a href="#" class="btn btn-primary me-2"><i class="fas fa-download me-1"></i> Descargar PDF</a>
+                                        <a href="#" class="btn btn-outline-primary"><i class="far fa-envelope me-1"></i> Contactar Nutricionista</a>
+                                    </div>
+                                </div>
+                                
+                                <div class="tab-pane fade" id="request-plan" role="tabpanel" aria-labelledby="request-plan-tab">
+                                    <h4 class="mb-3">Solicitar Nuevo Plan Nutricional</h4>
+                                    <p>Complete el siguiente formulario para solicitar un nuevo plan nutricional personalizado.</p>
+                                    
+                                    <form>
+                                        <div class="mb-3">
+                                            <label for="nutritionObjective" class="form-label">Objetivo Principal</label>
+                                            <select class="form-select" id="nutritionObjective" required>
+                                                <option value="" selected disabled>Seleccione un objetivo...</option>
+                                                <option value="weightLoss">Pérdida de peso</option>
+                                                <option value="muscleGain">Ganancia muscular</option>
+                                                <option value="maintenance">Mantenimiento</option>
+                                                <option value="performance">Rendimiento deportivo</option>
+                                            </select>
+                                        </div>
+                                        
+                                        <div class="row mb-3">
+                                            <div class="col-md-6">
+                                                <label for="currentWeight" class="form-label">Peso Actual (kg)</label>
+                                                <input type="number" class="form-control" id="currentWeight" required>
+                                            </div>
+                                            <div class="col-md-6">
+                                                <label for="targetWeight" class="form-label">Peso Deseado (kg)</label>
+                                                <input type="number" class="form-control" id="targetWeight">
+                                            </div>
+                                        </div>
+                                        
+                                        <div class="mb-3">
+                                            <label class="form-label">¿Tiene alguna alergia o intolerancia alimentaria?</label>
+                                            <div class="form-check">
+                                                <input class="form-check-input" type="checkbox" value="" id="lactoseIntolerant">
+                                                <label class="form-check-label" for="lactoseIntolerant">
+                                                    Intolerancia a la lactosa
+                                                </label>
+                                            </div>
+                                            <div class="form-check">
+                                                <input class="form-check-input" type="checkbox" value="" id="glutenIntolerant">
+                                                <label class="form-check-label" for="glutenIntolerant">
+                                                    Intolerancia al gluten
+                                                </label>
+                                            </div>
+                                            <div class="form-check">
+                                                <input class="form-check-input" type="checkbox" value="" id="nutAllergy">
+                                                <label class="form-check-label" for="nutAllergy">
+                                                    Alergia a frutos secos
+                                                </label>
+                                            </div>
+                                            <div class="form-check">
+                                                <input class="form-check-input" type="checkbox" value="" id="otherAllergy">
+                                                <label class="form-check-label" for="otherAllergy">
+                                                    Otras
+                                                </label>
+                                            </div>
+                                        </div>
+                                        
+                                        <div class="mb-3">
+                                            <label for="nutritionNotes" class="form-label">Información Adicional</label>
+                                            <textarea class="form-control" id="nutritionNotes" rows="3" placeholder="Por favor, incluya cualquier otra información relevante para su plan nutricional..."></textarea>
+                                        </div>
+                                        
+                                        <div class="text-center">
+                                            <button type="submit" class="btn btn-primary"><i class="fas fa-paper-plane me-1"></i> Enviar Solicitud</button>
+                                        </div>
+                                    </form>
+                                </div>
+                                
+                                <div class="tab-pane fade" id="history-plan" role="tabpanel" aria-labelledby="history-plan-tab">
+                                    <h4 class="mb-3">Historial de Planes Nutricionales</h4>
+                                    
+                                    <div class="table-responsive">
+                                        <table class="table table-striped">
+                                            <thead>
+                                                <tr>
+                                                    <th>Plan</th>
+                                                    <th>Fecha de Inicio</th>
+                                                    <th>Fecha de Fin</th>
+                                                    <th>Nutricionista</th>
+                                                    <th>Acciones</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <tr>
+                                                    <td>Volumen Muscular</td>
+                                                    <td>15/01/2025</td>
+                                                    <td>14/04/2025</td>
+                                                    <td>Dr. Fernando Ruiz</td>
+                                                    <td><a href="#" class="btn btn-sm btn-outline-primary"><i class="fas fa-eye"></i> Ver</a></td>
+                                                </tr>
+                                                <tr>
+                                                    <td>Definición Muscular</td>
+                                                    <td>15/04/2025</td>
+                                                    <td>Actual</td>
+                                                    <td>Dr. Fernando Ruiz</td>
+                                                    <td><a href="#" class="btn btn-sm btn-outline-primary"><i class="fas fa-eye"></i> Ver</a></td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="col-md-4">
+                    <div class="card mb-4">
+                        <div class="card-header">
+                            Tu nutricionista
+                        </div>
+                        <div class="card-body text-center">
+                            <img src="https://via.placeholder.com/150" class="rounded-circle mb-3" alt="Dr. Fernando Ruiz">
+                            <h5>Dr. Fernando Ruiz</h5>
+                            <p class="text-muted">Nutricionista Deportivo</p>
+                            <p><i class="fas fa-envelope me-2"></i>f.ruiz@freefit.com</p>
+                            <button class="btn btn-outline-primary btn-sm"><i class="fas fa-comment me-1"></i> Enviar Mensaje</button>
+                        </div>
+                    </div>
+                    
+                    <div class="card">
+                        <div class="card-header">
+                            Progreso
+                        </div>
+                        <div class="card-body">
+                            <canvas id="weightChart" width="100%" height="200"></canvas>
+                            <div class="d-grid gap-2 mt-3">
+                                <button class="btn btn-outline-primary btn-sm" data-bs-toggle="modal" data-bs-target="#weightRecordModal">
+                                    <i class="fas fa-plus-circle me-1"></i> Registrar Peso
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Training Plan Section -->
+        <div id="training" class="section-container">
+            <h2 class="mb-4">Plan de Entrenamiento</h2>
+            
+            <div class="row mb-4">
+                <div class="col-md-8">
+                    <div class="card">
+                        <div class="card-header">
+                            <ul class="nav nav-tabs card-header-tabs" id="trainingTab" role="tablist">
+                                <li class="nav-item" role="presentation">
+                                    <button class="nav-link active" id="current-training-tab" data-bs-toggle="tab" data-bs-target="#current-training" type="button" role="tab" aria-controls="current-training" aria-selected="true">Mi Plan Actual</button>
+                                </li>
+                                <li class="nav-item" role="presentation">
+                                    <button class="nav-link" id="request-training-tab" data-bs-toggle="tab" data-bs-target="#request-training" type="button" role="tab" aria-controls="request-training" aria-selected="false">Solicitar Nuevo Plan</button>
+                                </li>
+                                <li class="nav-item" role="presentation">
+                                    <button class="nav-link" id="progress-training-tab" data-bs-toggle="tab" data-bs-target="#progress-training" type="button" role="tab" aria-controls="progress-training" aria-selected="false">Progreso</button>
+                                </li>
+                            </ul>
+                        </div>
+                        <div class="card-body">
+                            <div class="tab-content" id="trainingTabContent">
+                                <div class="tab-pane fade show active" id="current-training" role="tabpanel" aria-labelledby="current-training-tab">
+                                    <h4 class="mb-3">Plan de Entrenamiento: Hipertrofia</h4>
+                                    <p class="mb-3"><strong>Asignado por:</strong> Roberto Méndez (Entrenador)</p>
+                                    <p class="mb-3"><strong>Fecha de inicio:</strong> 1 de abril, 2025</p>
+                                    <p class="mb-3"><strong>Objetivo:</strong> Aumento de masa muscular con enfoque en tren superior</p>
+                                    
+                                    <div class="accordion" id="trainingPlanAccordion">
+                                        <!-- Day 1 -->
+                                        <div class="accordion-item">
+                                            <h2 class="accordion-header" id="day1Heading">
+                                                <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#day1Content" aria-expanded="true" aria-controls="day1Content">
+                                                    Día 1: Pecho y Tríceps
+                                                </button>
+                                            </h2>
+                                            <div id="day1Content" class="accordion-collapse collapse show" aria-labelledby="day1Heading" data-bs-parent="#trainingPlanAccordion">
+                                                <div class="accordion-body">
+                                                    <div class="table-responsive">
+                                                        <table class="table">
+                                                            <thead>
+                                                                <tr>
+                                                                    <th>Ejercicio</th>
+                                                                    <th>Series</th>
+                                                                    <th>Repeticiones</th>
+                                                                    <th>Descanso</th>
+                                                                </tr>
+                                                            </thead>
+                                                            <tbody>
+                                                                <tr>
+                                                                    <td>Press de banca plano</td>
+                                                                    <td>4</td>
+                                                                    <td>8-10</td>
+                                                                    <td>90 seg.</td>
+                                                                </tr>
+                                                                <tr>
+                                                                    <td>Press de banca inclinado con mancuernas</td>
+                                                                    <td>3</td>
+                                                                    <td>10-12</td>
+                                                                    <td>60 seg.</td>
+                                                                </tr>
+                                                                <tr>
+                                                                    <td>Aperturas en polea</td>
+                                                                    <td>3</td>
+                                                                    <td>12-15</td>
+                                                                    <td>45 seg.</td>
+                                                                </tr>
+                                                                <tr>
+                                                                    <td>Fondos en paralelas</td>
+                                                                    <td>3</td>
+                                                                    <td>10-12</td>
+                                                                    <td>60 seg.</td>
+                                                                </tr>
+                                                                <tr>
+                                                                    <td>Extensiones de tríceps en polea</td>
+                                                                    <td>3</td>
+                                                                    <td>12-15</td>
+                                                                    <td>45 seg.</td>
+                                                                </tr>
+                                                            </tbody>
+                                                        </table>
+                                                    </div>
+                                                    <div class="alert alert-info mt-3">
+                                                        <i class="fas fa-info-circle me-2"></i> Realiza 5-10 minutos de cardio al final de la sesión.
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        
+                                        <!-- Day 2 -->
+                                        <div class="accordion-item">
+                                            <h2 class="accordion-header" id="day2Heading">
+                                                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#day2Content" aria-expanded="false" aria-controls="day2Content">
+                                                    Día 2: Espalda y Bíceps
+                                                </button>
+                                            </h2>
+                                            <div id="day2Content" class="accordion-collapse collapse" aria-labelledby="day2Heading" data-bs-parent="#trainingPlanAccordion">
+                                                <div class="accordion-body">
+                                                    <div class="table-responsive">
+                                                        <table class="table">
+                                                            <thead>
+                                                                <tr>
+                                                                    <th>Ejercicio</th>
+                                                                    <th>Series</th>
+                                                                    <th>Repeticiones</th>
+                                                                    <th>Descanso</th>
+                                                                </tr>
+                                                            </thead>
+                                                            <tbody>
+                                                                <tr>
+                                                                    <td>Dominadas</td>
+                                                                    <td>4</td>
+                                                                    <td>8-10</td>
+                                                                    <td>90 seg.</td>
+                                                                </tr>
+                                                                <tr>
+                                                                    <td>Remo con barra</td>
+                                                                    <td>3</td>
+                                                                    <td>10-12</td>
+                                                                    <td>60 seg.</td>
+                                                                </tr>
+                                                                <tr>
+                                                                    <td>Remo en polea sentado</td>
+                                                                    <td>3</td>
+                                                                    <td>12-15</td>
+                                                                    <td>45 seg.</td>
+                                                                </tr>
+                                                                <tr>
+                                                                    <td>Curl con barra</td>
+                                                                    <td>3</td>
+                                                                    <td>10-12</td>
+                                                                    <td>60 seg.</td>
+                                                                </tr>
+                                                                <tr>
+                                                                    <td>Curl martillo</td>
+                                                                    <td>3</td>
+                                                                    <td>12-15</td>
+                                                                    <td>45 seg.</td>
+                                                                </tr>
+                                                            </tbody>
+                                                        </table>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        
+                                        <!-- More days... -->
+                                    </div>
+                                    
+                                    <div class="mt-4 text-center">
+                                        <a href="#" class="btn btn-primary me-2"><i class="fas fa-download me-1"></i> Descargar PDF</a>
+                                        <a href="#" class="btn btn-outline-primary"><i class="far fa-envelope me-1"></i> Contactar Entrenador</a>
+                                    </div>
+                                </div>
+                                
+                                <div class="tab-pane fade" id="request-training" role="tabpanel" aria-labelledby="request-training-tab">
+                                    <h4 class="mb-3">Solicitar Nuevo Plan de Entrenamiento</h4>
+                                    <p>Complete el siguiente formulario para solicitar un nuevo plan de entrenamiento personalizado.</p>
+                                    
+                                    <form>
+                                        <div class="mb-3">
+                                            <label for="trainingObjective" class="form-label">Objetivo Principal</label>
+                                            <select class="form-select" id="trainingObjective" required>
+                                                <option value="" selected disabled>Seleccione un objetivo...</option>
+                                                <option value="strength">Fuerza</option>
+                                                <option value="hypertrophy">Hipertrofia</option>
+                                                <option value="endurance">Resistencia</option>
+                                                <option value="weightLoss">Pérdida de peso</option>
+                                            </select>
+                                        </div>
+                                        
+                                        <div class="mb-3">
+                                            <label class="form-label">Nivel de Experiencia</label>
+                                            <div class="form-check">
+                                                <input class="form-check-input" type="radio" name="experienceLevel" id="beginner" value="beginner" checked>
+                                                <label class="form-check-label" for="beginner">Principiante</label>
+                                            </div>
+                                            <div class="form-check">
+                                                <input class="form-check-input" type="radio" name="experienceLevel" id="intermediate" value="intermediate">
+                                                <label class="form-check-label" for="intermediate">Intermedio</label>
+                                            </div>
+                                            <div class="form-check">
+                                                <input class="form-check-input" type="radio" name="experienceLevel" id="advanced" value="advanced">
+                                                <label class="form-check-label" for="advanced">Avanzado</label>
+                                            </div>
+                                        </div>
+                                        
+                                        <div class="mb-3">
+                                            <label class="form-label">Días disponibles para entrenar por semana</label>
+                                            <div class="form-check">
+                                                <input class="form-check-input" type="checkbox" value="" id="monday">
+                                                <label class="form-check-label" for="monday">Lunes</label>
+                                            </div>
+                                            <div class="form-check">
+                                                <input class="form-check-input" type="checkbox" value="" id="tuesday">
+                                                <label class="form-check-label" for="tuesday">Martes</label>
+                                            </div>
+                                            <div class="form-check">
+                                                <input class="form-check-input" type="checkbox" value="" id="wednesday">
+                                                <label class="form-check-label" for="wednesday">Miércoles</label>
+                                            </div>
+                                            <div class="form-check">
+                                                <input class="form-check-input" type="checkbox" value="" id="thursday">
+                                                <label class="form-check-label" for="thursday">Jueves</label>
+                                            </div>
+                                            <div class="form-check">
+                                                <input class="form-check-input" type="checkbox" value="" id="friday">
+                                                <label class="form-check-label" for="friday">Viernes</label>
+                                            </div>
+                                            <div class="form-check">
+                                                <input class="form-check-input" type="checkbox" value="" id="saturday">
+                                                <label class="form-check-label" for="saturday">Sábado</label>
+                                            </div>
+                                            <div class="form-check">
+                                                <input class="form-check-input" type="checkbox" value="" id="sunday">
+                                                <label class="form-check-label" for="sunday">Domingo</label>
+                                            </div>
+                                        </div>
+                                        
+                                        <div class="mb-3">
+                                            <label for="trainingNotes" class="form-label">Detalles adicionales</label>
+                                            <textarea class="form-control" id="trainingNotes" rows="3" placeholder="Indique cualquier lesión, limitación o preferencia que deba ser considerada..."></textarea>
+                                        </div>
+                                        
+                                        <div class="text-center">
+                                            <button type="submit" class="btn btn-primary"><i class="fas fa-paper-plane me-1"></i> Enviar Solicitud</button>
+                                        </div>
+                                    </form>
+                                </div>
+                                
+                                <div class="tab-pane fade" id="progress-training" role="tabpanel" aria-labelledby="progress-training-tab">
+                                    <h4 class="mb-3">Mi Progreso de Entrenamiento</h4>
+                                    
+                                    <div class="row mb-4">
+                                        <div class="col-md-6">
+                                            <div class="card">
+                                                <div class="card-header">
+                                                    Progreso de Fuerza
+                                                </div>
+                                                <div class="card-body">
+                                                    <canvas id="strengthChart" width="100%" height="250"></canvas>
+                                                </div>
+                                                <div class="card-footer bg-white text-center">
+                                                    <button class="btn btn-sm btn-outline-primary" data-bs-toggle="modal" data-bs-target="#strengthRecordModal">
+                                                        <i class="fas fa-plus-circle me-1"></i> Registrar progreso
+                                                    </button>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <div class="card">
+                                                <div class="card-header">
+                                                    Medidas Corporales
+                                                </div>
+                                                <div class="card-body">
+                                                    <canvas id="measurementsChart" width="100%" height="250"></canvas>
+                                                </div>
+                                                <div class="card-footer bg-white text-center">
+                                                    <button class="btn btn-sm btn-outline-primary" data-bs-toggle="modal" data-bs-target="#measurementsRecordModal">
+                                                        <i class="fas fa-plus-circle me-1"></i> Registrar medidas
+                                                    </button>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    
+                                    <h5 class="mb-3">Registro de Asistencia</h5>
+                                    <div class="card">
+                                        <div class="card-body">
+                                            <div id="attendanceCalendar" class="mb-3">
+                                                <!-- Calendar will be rendered here via JavaScript -->
+                                            </div>
+                                            <div class="d-flex align-items-center">
+                                                <div class="me-3">
+                                                    <span class="badge bg-success me-1">&nbsp;</span> Entrenamiento completado
+                                                </div>
+                                                <div class="me-3">
+                                                    <span class="badge bg-warning me-1">&nbsp;</span> Entrenamiento parcial
+                                                </div>
+                                                <div>
+                                                    <span class="badge bg-danger me-1">&nbsp;</span> Falta
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="col-md-4">
+                    <div class="card mb-4">
+                        <div class="card-header">
+                            Tu entrenador
+                        </div>
+                        <div class="card-body text-center">
+                            <img src="https://via.placeholder.com/150" class="rounded-circle mb-3" alt="Roberto Méndez">
+                            <h5>Roberto Méndez</h5>
+                            <p class="text-muted">Entrenador Personal</p>
+                            <p><i class="fas fa-envelope me-2"></i>r.mendez@freefit.com</p>
+                            <button class="btn btn-outline-primary btn-sm"><i class="fas fa-comment me-1"></i> Enviar Mensaje</button>
+                        </div>
+                    </div>
+                    
+                    <div class="card">
+                        <div class="card-header">
+                            Rendimiento Reciente
+                        </div>
+                        <div class="card-body">
+                            <ul class="list-group list-group-flush">
+                                <li class="list-group-item d-flex justify-content-between align-items-center">
+                                    Asistencia
+                                    <span class="badge bg-primary rounded-pill">90%</span>
+                                </li>
+                                <li class="list-group-item d-flex justify-content-between align-items-center">
+                                    Intensidad
+                                    <span class="badge bg-primary rounded-pill">85%</span>
+                                </li>
+                                <li class="list-group-item d-flex justify-content-between align-items-center">
+                                    Progreso
+                                    <span class="badge bg-primary rounded-pill">75%</span>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Profile Section -->
+        <div id="profile" class="section-container">
+            <h2 class="mb-4">Mi Perfil</h2>
+            
+            <div class="row">
+                <div class="col-md-4">
+                    <div class="card mb-4">
+                        <div class="card-body text-center">
+                            <img src="https://via.placeholder.com/150" class="rounded-circle img-thumbnail mb-3" alt="Foto de Perfil">
+                            <h5>Juan García Martínez</h5>
+                            <p class="text-muted">Cliente desde 10 de enero, 2025</p>
+                            <p><i class="fas fa-medal me-2 text-warning"></i>Membresía Plata</p>
+                            <button class="btn btn-outline-primary btn-sm"><i class="fas fa-camera me-1"></i> Cambiar Foto</button>
+                        </div>
+                    </div>
+                    
+                    <div class="card">
+                        <div class="card-header">
+                            Membresía
+                        </div>
+                        <div class="card-body">
+                            <h5 class="card-title">Plan Plata</h5>
+                            <p class="card-text">
+                                <i class="fas fa-check-circle me-2 text-success"></i>Acceso ilimitado al gimnasio<br>
+                                <i class="fas fa-check-circle me-2 text-success"></i>3 clases grupales por semana<br>
+                                <i class="fas fa-check-circle me-2 text-success"></i>1 plan nutricional al mes<br>
+                                <i class="fas fa-check-circle me-2 text-success"></i>1 plan de entrenamiento al mes<br>
+                                <i class="fas fa-times-circle me-2 text-danger"></i>Entrenador personal exclusivo<br>
+                                <i class="fas fa-times-circle me-2 text-danger"></i>Acceso a spa
+                            </p>
+                            <hr>
+                            <p><strong>Próxima renovación:</strong> 10 de junio, 2025</p>
+                            <div class="d-grid">
+                                <button class="btn btn-primary btn-sm" data-bs-toggle="modal" data-bs-target="#upgradeMembershipModal"><i class="fas fa-arrow-up me-1"></i> Mejorar Membresía</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="col-md-8">
+                    <div class="card mb-4">
+                        <div class="card-header">
+                            <ul class="nav nav-tabs card-header-tabs" id="profileTab" role="tablist">
+                                <li class="nav-item" role="presentation">
+                                    <button class="nav-link active" id="personal-info-tab" data-bs-toggle="tab" data-bs-target="#personal-info" type="button" role="tab" aria-controls="personal-info" aria-selected="true">Información Personal</button>
+                                </li>
+                                <li class="nav-item" role="presentation">
+                                    <button class="nav-link" id="health-info-tab" data-bs-toggle="tab" data-bs-target="#health-info" type="button" role="tab" aria-controls="health-info" aria-selected="false">Información de Salud</button>
+                                </li>
+                                <li class="nav-item" role="presentation">
+                                    <button class="nav-link" id="payment-info-tab" data-bs-toggle="tab" data-bs-target="#payment-info" type="button" role="tab" aria-controls="payment-info" aria-selected="false">Información de Pago</button>
+                                </li>
+                            </ul>
+                        </div>
+                        <div class="card-body">
+                            <div class="tab-content" id="profileTabContent">
+                                <div class="tab-pane fade show active" id="personal-info" role="tabpanel" aria-labelledby="personal-info-tab">
+                                    <form>
+                                        <div class="row mb-3">
+                                            <div class="col-md-6">
+                                                <label for="firstName" class="form-label">Nombre</label>
+                                                <input type="text" class="form-control" id="firstName" value="Juan">
+                                            </div>
+                                            <div class="col-md-6">
+                                                <label for="lastName" class="form-label">Apellidos</label>
+                                                <input type="text" class="form-control" id="lastName" value="García Martínez">
+                                            </div>
+                                        </div>
+                                        
+                                        <div class="mb-3">
+                                            <label for="email" class="form-label">Correo Electrónico</label>
+                                            <input type="email" class="form-control" id="email" value="juan.garcia@example.com">
+                                        </div>
+                                        
+                                        <div class="row mb-3">
+                                            <div class="col-md-6">
+                                                <label for="phone" class="form-label">Teléfono</label>
+                                                <input type="tel" class="form-control" id="phone" value="555-123-456">
+                                            </div>
+                                            <div class="col-md-6">
+                                                <label for="birthDate" class="form-label">Fecha de Nacimiento</label>
+                                                <input type="date" class="form-control" id="birthDate" value="1990-05-15">
+                                            </div>
+                                        </div>
+                                        
+                                        <div class="mb-3">
+                                            <label for="address" class="form-label">Dirección</label>
+                                            <textarea class="form-control" id="address" rows="2">Calle Principal 123, Ciudad</textarea>
+                                        </div>
+                                        
+                                        <div class="text-center">
+                                            <button type="submit" class="btn btn-primary">Guardar Cambios</button>
+                                        </div>
+                                    </form>
+                                </div>
+                                
+                                <div class="tab-pane fade" id="health-info" role="tabpanel" aria-labelledby="health-info-tab">
+                                    <form>
+                                        <div class="row mb-3">
+                                            <div class="col-md-6">
+                                                <label for="height" class="form-label">Altura (cm)</label>
+                                                <input type="number" class="form-control" id="height" value="178">
+                                            </div>
+                                            <div class="col-md-6">
+                                                <label for="weight" class="form-label">Peso (kg)</label>
+                                                <input type="number" class="form-control" id="weight" value="75">
+                                            </div>
+                                        </div>
+                                        
+                                        <div class="mb-3">
+                                            <label class="form-label">Condiciones Médicas</label>
+                                            <div class="form-check">
+                                                <input class="form-check-input" type="checkbox" value="" id="heartCondition">
+                                                <label class="form-check-label" for="heartCondition">
+                                                    Problemas cardíacos
+                                                </label>
+                                            </div>
+                                            <div class="form-check">
+                                                <input class="form-check-input" type="checkbox" value="" id="asthma">
+                                                <label class="form-check-label" for="asthma">
+                                                    Asma
+                                                </label>
+                                            </div>
+                                            <div class="form-check">
+                                                <input class="form-check-input" type="checkbox" value="" id="diabetes">
+                                                <label class="form-check-label" for="diabetes">
+                                                    Diabetes
+                                                </label>
+                                            </div>
+                                            <div class="form-check">
+                                                <input class="form-check-input" type="checkbox" value="" id="hypertension">
+                                                <label class="form-check-label" for="hypertension">
+                                                    Hipertensión
+                                                </label>
+                                            </div>
+                                        </div>
+                                        
+                                        <div class="mb-3">
+                                            <label for="allergies" class="form-label">Alergias</label>
+                                            <input type="text" class="form-control" id="allergies" placeholder="Ninguna">
+                                        </div>
+                                        
+                                        <div class="mb-3">
+                                            <label for="medicationInfo" class="form-label">Medicación Actual</label>
+                                            <textarea class="form-control" id="medicationInfo" rows="2" placeholder="Ninguna"></textarea>
+                                        </div>
+                                        
+                                        <div class="mb-3">
+                                            <label for="emergencyContact" class="form-label">Contacto de Emergencia</label>
+                                            <input type="text" class="form-control" id="emergencyContact" value="María García - 555-987-654 (Hermana)">
+                                        </div>
+                                        
+                                        <div class="text-center">
+                                            <button type="submit" class="btn btn-primary">Guardar Información de Salud</button>
+                                        </div>
+                                    </form>
+                                </div>
+                                
+                                <div class="tab-pane fade" id="payment-info" role="tabpanel" aria-labelledby="payment-info-tab">
+                                    <div class="mb-4">
+                                        <h5>Método de Pago Actual</h5>
+                                        <div class="d-flex align-items-center p-2 border rounded mb-3">
+                                            <i class="fab fa-cc-visa fa-2x me-3 text-primary"></i>
+                                            <div>
+                                                <p class="mb-0 fw-bold">Visa terminada en 4589</p>
+                                                <p class="mb-0 small text-muted">Expira: 06/2027</p>
+                                            </div>
+                                            <div class="ms-auto">
+                                                <button class="btn btn-sm btn-outline-danger"><i class="fas fa-trash"></i></button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    
+                                    <h5 class="mb-3">Añadir Nuevo Método de Pago</h5>
+                                    <form>
+                                        <div class="mb-3">
+                                            <label for="cardNumber" class="form-label">Número de Tarjeta</label>
+                                            <input type="text" class="form-control" id="cardNumber" placeholder="1234 5678 9012 3456">
+                                        </div>
+                                        
+                                        <div class="row mb-3">
+                                            <div class="col-md-6">
+                                                <label for="cardName" class="form-label">Nombre en la Tarjeta</label>
+                                                <input type="text" class="form-control" id="cardName" placeholder="JUAN GARCIA">
+                                            </div>
+                                            <div class="col-md-3">
+                                                <label for="cardExpiry" class="form-label">Fecha de Expiración</label>
+                                                <input type="text" class="form-control" id="cardExpiry" placeholder="MM/AA">
+                                            </div>
+                                            <div class="col-md-3">
+                                                <label for="cardCvv" class="form-label">CVV</label>
+                                                <input type="text" class="form-control" id="cardCvv" placeholder="123">
+                                            </div>
+                                        </div>
+                                        
+                                        <div class="text-center">
+                                            <button type="submit" class="btn btn-primary">Guardar Tarjeta</button>
+                                        </div>
+                                    </form>
+                                    
+                                    <hr class="my-4">
+                                    
+                                    <h5 class="mb-3">Historial de Pagos</h5>
+                                    <div class="table-responsive">
+                                        <table class="table table-striped">
+                                            <thead>
+                                                <tr>
+                                                    <th>Fecha</th>
+                                                    <th>Descripción</th>
+                                                    <th>Importe</th>
+                                                    <th>Estado</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <tr>
+                                                    <td>10/04/2025</td>
+                                                    <td>Membresía Plata - Abril</td>
+                                                    <td>$49.99</td>
+                                                    <td><span class="badge bg-success">Pagado</span></td>
+                                                </tr>
+                                                <tr>
+                                                    <td>10/03/2025</td>
+                                                    <td>Membresía Plata - Marzo</td>
+                                                    <td>$49.99</td>
+                                                    <td><span class="badge bg-success">Pagado</span></td>
+                                                </tr>
+                                                <tr>
+                                                    <td>10/02/2025</td>
+                                                    <td>Membresía Plata - Febrero</td>
+                                                    <td>$49.99</td>
+                                                    <td><span class="badge bg-success">Pagado</span></td>
+                                                </tr>
+                                                <tr>
+                                                    <td>10/01/2025</td>
+                                                    <td>Membresía Plata - Enero</td>
+                                                    <td>$49.99</td>
+                                                    <td><span class="badge bg-success">Pagado</span></td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modals -->
+    <!-- Class Registration Modal -->
+    <div class="modal fade" id="classRegistrationModal" tabindex="-1" aria-labelledby="classRegistrationModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="classRegistrationModalLabel">Registrarse en Clase</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form>
+                        <div class="mb-3">
+                            <label for="className" class="form-label">Clase</label>
+                            <input type="text" class="form-control" id="className" value="Spinning" readonly>
+                        </div>
+                        <div class="mb-3">
+                            <label for="classInstructor" class="form-label">Instructor</label>
+                            <input type="text" class="form-control" id="classInstructor" value="Juan Pérez" readonly>
+                        </div>
+                        <div class="mb-3">
+                            <label for="classSchedule" class="form-label">Horario</label>
+                            <input type="text" class="form-control" id="classSchedule" value="Lunes, Miércoles, Viernes 18:00 - 19:00" readonly>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Seleccione los días a los que asistirá</label>
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" value="lunes" id="attendMonday">
+                                <label class="form-check-label" for="attendMonday">Lunes</label>
+                            </div>
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" value="miercoles" id="attendWednesday">
+                                <label class="form-check-label" for="attendWednesday">Miércoles</label>
+                            </div>
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" value="viernes" id="attendFriday">
+                                <label class="form-check-label" for="attendFriday">Viernes</label>
+                            </div>
+                        </div>
+                        <div class="mb-3">
+                            <label for="classNotes" class="form-label">Notas adicionales</label>
+                            <textarea class="form-control" id="classNotes" rows="2" placeholder="Incluya cualquier información adicional o requerimiento especial..."></textarea>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                    <button type="button" class="btn btn-primary">Confirmar Registro</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Weight Record Modal -->
+    <div class="modal fade" id="weightRecordModal" tabindex="-1" aria-labelledby="weightRecordModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="weightRecordModalLabel">Registrar Peso</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form>
+                        <div class="mb-3">
+                            <label for="recordDate" class="form-label">Fecha</label>
+                            <input type="date" class="form-control" id="recordDate" value="2025-05-14">
+                        </div>
+                        <div class="mb-3">
+                            <label for="weightRecord" class="form-label">Peso (kg)</label>
+                            <input type="number" step="0.1" class="form-control" id="weightRecord" placeholder="75.0">
+                        </div>
+                        <div class="mb-3">
+                            <label for="bodyFatRecord" class="form-label">Porcentaje de Grasa Corporal (%)</label>
+                            <input type="number" step="0.1" class="form-control" id="bodyFatRecord" placeholder="18.5">
+                        </div>
+                        <div class="mb-3">
+                            <label for="weightNotes" class="form-label">Notas</label>
+                            <textarea class="form-control" id="weightNotes" rows="2"></textarea>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                    <button type="button" class="btn btn-primary">Guardar</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Notifications Modal -->
+    <div class="modal fade" id="notificationsModal" tabindex="-1" aria-labelledby="notificationsModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="notificationsModalLabel">Notificaciones</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="list-group">
+                        <a href="#" class="list-group-item list-group-item-action">
+                            <div class="d-flex w-100 justify-content-between">
+                                <h6 class="mb-1">Nuevo plan nutricional disponible</h6>
+                                <small>Hace 3 horas</small>
+                            </div>
+                            <p class="mb-1">Dr. Fernando Ruiz ha actualizado tu plan nutricional. Consulta la nueva dieta.</p>
+                        </a>
+                        <a href="#" class="list-group-item list-group-item-action">
+                            <div class="d-flex w-100 justify-content-between">
+                                <h6 class="mb-1">Recordatorio de clase</h6>
+                                <small>Hace 1 día</small>
+                            </div>
+                            <p class="mb-1">Tu clase de Yoga comienza mañana a las 10:00. No olvides traer tu esterilla.</p>
+                        </a>
+                        <a href="#" class="list-group-item list-group-item-action">
+                            <div class="d-flex w-100 justify-content-between">
+                                <h6 class="mb-1">Nueva oferta especial</h6>
+                                <small>Hace 2 días</small>
+                            </div>
+                            <p class="mb-1">30% de descuento en todos los suplementos esta semana. ¡No te lo pierdas!</p>
+                        </a>
+                        <a href="#" class="list-group-item list-group-item-action">
+                            <div class="d-flex w-100 justify-content-between">
+                                <h6 class="mb-1">Mensaje de tu entrenador</h6>
+                                <small>Hace 3 días</small>
+                            </div>
+                            <p class="mb-1">Roberto Méndez te ha enviado un mensaje sobre tu progreso. Revisa tu plan de entrenamiento.</p>
+                        </a>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-primary" data-bs-dismiss="modal">Marcar todas como leídas</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- JavaScript Bundle with Popper -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    
+    <script>
+        // Función para cambiar entre secciones
+        function showSection(sectionId) {
+            // Ocultar todas las secciones
+            document.querySelectorAll('.section-container').forEach(section => {
+                section.classList.remove('active');
+            });
+            
+            // Mostrar la sección seleccionada
+            document.getElementById(sectionId).classList.add('active');
+            
+            // Actualizar la navegación
+            document.querySelectorAll('.sidebar .nav-link').forEach(link => {
+                link.classList.remove('active');
+            });
+            
+            document.querySelector(`.sidebar .nav-link[onclick="showSection('${sectionId}')"]`).classList.add('active');
+        }
+        
+        // Alternar la visibilidad del sidebar en móvil
+        document.getElementById('sidebar-toggler').addEventListener('click', function() {
+            document.querySelector('.sidebar').classList.toggle('show');
+        });
+        
+        // Inicializar los gráficos cuando el documento esté cargado
+        document.addEventListener('DOMContentLoaded', function() {
+            // Gráfico de peso
+            const weightCtx = document.getElementById('weightChart').getContext('2d');
+            const weightChart = new Chart(weightCtx, {
+                type: 'line',
+                data: {
+                    labels: ['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo'],
+                    datasets: [{
+                        label: 'Peso (kg)',
+                        data: [78, 76, 75.5, 75, 74.2],
+                        backgroundColor: 'rgba(26, 115, 232, 0.2)',
+                        borderColor: 'rgba(26, 115, 232, 1)',
+                        borderWidth: 2,
+                        tension: 0.3
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    plugins: {
+                        legend: {
+                            display: false
+                        }
+                    },
+                    scales: {
+                        y: {
+                            beginAtZero: false,
+                            min: 70,
+                            max: 80
+                        }
+                    }
+                }
+            });
+            
+            // Gráfico de fuerza
+            if (document.getElementById('strengthChart')) {
+                const strengthCtx = document.getElementById('strengthChart').getContext('2d');
+                const strengthChart = new Chart(strengthCtx, {
+                    type: 'line',
+                    data: {
+                        labels: ['Semana 1', 'Semana 2', 'Semana 3', 'Semana 4', 'Semana 5'],
+                        datasets: [{
+                            label: 'Press de banca (kg)',
+                            data: [60, 65, 67.5, 70, 72.5],
+                            borderColor: 'rgba(52, 168, 83, 1)',
+                            backgroundColor: 'rgba(52, 168, 83, 0.2)',
+                            borderWidth: 2,
+                            tension: 0.3
+                        },
+                        {
+                            label: 'Sentadilla (kg)',
+                            data: [80, 85, 90, 95, 100],
+                            borderColor: 'rgba(26, 115, 232, 1)',
+                            backgroundColor: 'rgba(26, 115, 232, 0.2)',
+                            borderWidth: 2,
+                            tension: 0.3
+                        }]
+                    },
+                    options: {
+                        responsive: true
+                    }
+                });
+            }
+            
+            // Gráfico de medidas
+            if (document.getElementById('measurementsChart')) {
+                const measurementsCtx = document.getElementById('measurementsChart').getContext('2d');
+                const measurementsChart = new Chart(measurementsCtx, {
+                    type: 'radar',
+                    data: {
+                        labels: ['Pecho', 'Brazos', 'Cintura', 'Cadera', 'Muslos'],
+                        datasets: [{
+                            label: 'Abril',
+                            data: [95, 35, 82, 98, 58],
+                            backgroundColor: 'rgba(26, 115, 232, 0.2)',
+                            borderColor: 'rgba(26, 115, 232, 1)',
+                            borderWidth: 2
+                        },
+                        {
+                            label: 'Mayo',
+                            data: [97, 36, 80, 97, 59],
+                            backgroundColor: 'rgba(52, 168, 83, 0.2)',
+                            borderColor: 'rgba(52, 168, 83, 1)',
+                            borderWidth: 2
+                        }]
+                    },
+                    options: {
+                        responsive: true
+                    }
+                });
+            }
+        });
+    </script>
+</body>
+</html>
